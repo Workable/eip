@@ -2,7 +2,7 @@
 
 Aggregator Enterprise Integration Module
 
-This repo enhances Aggregator Functionality and is based in this library:
+This repo enhances Aggregator Functionality and is based on this library:
 
 https://github.com/jkanschik/node-eip
 
