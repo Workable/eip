@@ -7,7 +7,6 @@
 , "devel": true
 , "eqeqeq": true
 , "eqnull": true
-, "es6": true
 , "evil": false
 , "immed": false
 , "indent": 2
@@ -23,7 +22,7 @@
 , "node": true
 , "noempty": false
 , "nonew": true
-, "quotmark": "single"
+, "quotmark": false
 , "nonew": true
 , "predef":
   [ "describe"
