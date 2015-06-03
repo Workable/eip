@@ -1,1 +1,1 @@
-module.exports = require('./lib/aggregator');
+module.exports = require('./lib/eip.js');

@@ -1,6 +1,7 @@
 var vows = require('vows'),
   assert = require('assert'),
-  eip = require("../lib/eip");
+  eip = require("../lib/eip")
+  , Route = eip.Route;
 
 vows.describe('If processors throw an exception').addBatch({
   'with default error handling': {

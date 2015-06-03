@@ -3,13 +3,14 @@
   "description": "Aggregattor Enterprise Integration Module",
   "version": "0.0.0",
   "dependencies": {
+    "async": "^1.2.0",
     "log4js": "^0.6.25",
     "uuid": "^2.0.1"
   },
   "scripts": {
     "lint": "jshint .",
     "checkStyle": "jscs .",
-    "pretest": "npm run-script lint && npm run-script checkStyle",
+    "pretest_old": "npm run-script lint && npm run-script checkStyle",
     "test": "./node_modules/vows/bin/vows test/* --spec",
     "test_old": "istanbul cover ./node_modules/.bin/_mocha test",
     "posttest_old": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage"

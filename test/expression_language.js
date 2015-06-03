@@ -1,7 +1,6 @@
 var vows = require('vows'),
   assert = require('assert'),
   sel = require('../lib/el/sel.js'),
-  eipUtil = require('../lib/util').Util,
   Route = require("../lib/eip").Route;
 
 // Create a Test Suite
