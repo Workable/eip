@@ -1,6 +1,5 @@
 var vows = require('vows')
   , assert = require('assert')
-  , eip = require("../index")
   , Route = require("../lib/eip").Route;
 
 vows.describe('For throttling').addBatch({

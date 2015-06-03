@@ -24,7 +24,6 @@ vows.describe('For simple asynchronous routes:').addBatch({
   },
   'when sending two events to an interval aggregator': {
     topic: function() {
-      var that = this;
       var r = new eip.Route()
         .aggregate({emitter: new eip.aggregator.Emitter.IntervalEmitter(1000)})
         .process(this.callback);
