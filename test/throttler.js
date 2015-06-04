@@ -8,7 +8,7 @@ vows.describe('For throttling').addBatch({
       var self = this;
       this.events = [];
       var r = new Route()
-        .throttle(1)
+        .throttle(3)
         .toArray(this.events);
       for (var i = 0; i < 3; i++)
         r.inject({data: i});

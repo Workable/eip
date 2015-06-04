@@ -3,6 +3,8 @@ var vows = require('vows'),
   eip = require("../lib/eip")
   , Route = eip.Route;
 
+eip.config.route.retryDelay = 1;
+
 vows.describe('If processors throw an exception').addBatch({
   'with default error handling': {
     topic: function() {
