@@ -5,6 +5,8 @@
   "dependencies": {
     "async": "^1.2.0",
     "log4js": "^0.6.25",
+    "mongoose": "^4.0.4",
+    "promise": "^7.0.1",
     "uuid": "^2.0.1"
   },
   "scripts": {
