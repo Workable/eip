@@ -27,6 +27,9 @@
     "jscs": "^1.6.1",
     "jshint": "^2.5.6",
     "mocha": "^2.2.1",
+    "mongoose-fixtures": "0.0.1",
+    "should": "^6.0.3",
+    "sinon": "^1.14.1",
     "vows": "^0.8.1"
   },
   "repository": {
