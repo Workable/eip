@@ -31,7 +31,9 @@
     "before",
     "beforeEach",
     "after",
-    "afterEach"
+    "afterEach",
+    "should",
+    "Promise"
   ],
   "smarttabs": true,
   "strict": false,
