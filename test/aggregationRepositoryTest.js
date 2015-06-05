@@ -44,7 +44,7 @@ describe('Test AggregationRepository Model', function () {
     data.length.should.equal(0);
   });
 
-  it('should change the status of the correlationI, contextId tuple to completed', function * () {
+  it('should change the status of the correlationId, contextId tuple to completed', function * () {
     AggregationRepository.complete('123456', 'Route1').then(function * (){
       var data = yield AggregationRepository.get('123456', 'Route1');
       data.correlationId.should.equal('123456');
