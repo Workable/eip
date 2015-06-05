@@ -19,7 +19,7 @@ npm install --save aggregator-eip
 
 var Aggregator = require('aggregator-eip')
 
-var aggr = new Aggregator({ repository:{ mongo_url:'' , options:''})
+var aggr = new Aggregator({ db: ''})
 
 Aggregator.register('newProcessor', processor)
 

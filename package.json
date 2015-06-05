@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "dependencies": {
     "async": "^1.2.0",
+    "co": "^4.5.4",
     "log4js": "^0.6.25",
     "mongoose": "^4.0.4",
-    "promise": "^7.0.1",
     "uuid": "^2.0.1"
   },
   "scripts": {
@@ -15,7 +15,8 @@
     "pretest": "npm run-script lint && npm run-script checkStyle",
     "test": "istanbul cover ./node_modules/vows/bin/vows test/** --spec",
     "test_new": "istanbul cover ./node_modules/.bin/_mocha test/**",
-    "posttest": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage"
+    "posttest": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage",
+    "console": "node --harmony console.js"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org"
@@ -28,6 +29,7 @@
     "jshint": "^2.5.6",
     "mocha": "^2.2.1",
     "mongoose-fixtures": "0.0.1",
+    "repl.history": "^0.1.3",
     "should": "^6.0.3",
     "sinon": "^1.14.1",
     "vows": "^0.8.1"

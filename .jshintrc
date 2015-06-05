@@ -13,6 +13,7 @@
   "indent": 2,
   "jquery": true,
   "latedef": false,
+  "esnext": true,
   "laxbreak": true,
   "laxcomma": true,
   "maxcomplexity": 6,
