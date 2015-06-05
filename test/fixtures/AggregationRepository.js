@@ -43,5 +43,13 @@ exports.AggregationRepository = {
       }
     ],
     status: "initial"
+  },
+  "4" : {
+    correlationId: "374619",
+    contextId: "Route3",
+    events: [
+
+    ],
+    status: "expired"
   }
 };
