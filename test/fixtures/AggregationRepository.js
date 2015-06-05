@@ -2,6 +2,7 @@
 exports.AggregationRepository = {
   "1" : {
     correlationId: "123456",
+    contextId: "Route1",
     events: [
       {
         type: 'Clearbit',
@@ -14,10 +15,12 @@ exports.AggregationRepository = {
         name: 'John Doe',
         twitterHandle: 'https://www.twitter/johnny'
       }
-    ]
+    ],
+    status: "initial"
   },
   "2" : {
     correlationId: "456789",
+    contextId: "Route1",
     events: [
       {
         type: 'Fullcontact',
@@ -25,10 +28,12 @@ exports.AggregationRepository = {
         facebookUrl: 'https://www.facebook.com/natalie_sung',
         email: 'natalie@gmail.com'
       }
-    ]
+    ],
+    status: "initial"
   },
   "3" : {
     correlationId: "678910",
+    contextId: "Route2",
     events: [
       {
         type: 'Peoplegraph',
@@ -36,6 +41,7 @@ exports.AggregationRepository = {
         facebookUrl: 'https://www.facebook.com/david_bodelos',
         email: 'david@gmail.com'
       }
-    ]
+    ],
+    status: "initial"
   }
 };

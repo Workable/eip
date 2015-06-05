@@ -50,6 +50,9 @@ aggr.newProcessor()
 
  var a = agg.add('123',{name:'Nikos Dimos'}).async()
 
+ // How to start with debugger in tests:
+ node debug --harmony ./node_modules/.bin/_mocha
+
 
 
 ## License
