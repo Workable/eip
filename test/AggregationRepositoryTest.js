@@ -29,7 +29,7 @@ describe('Test AggregationRepository Model', function () {
   it('should add a new event', function * () {
     var data = yield AggregationRepository.add("192837", "Route3", {name: 'Darth Veider'});
     data.correlationId.should.equal('192837');
-    data.events.pop().name.should.equal('Darth Veider');
+    data.events.slice(0,1).pop().name.should.equal('Darth Veider');
   });
 
   it('should return keys for all entries of Route1', function * () {
