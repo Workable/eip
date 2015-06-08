@@ -25,14 +25,6 @@ if (!global.describe) {
 }
 
 
-mongoose.connect('mongodb://localhost/aggregation', options);
-var db = mongoose.connection;
-db.on('error', function (err) {
-  console.error('unable to connect to database', err);
-  throw err;
-});
-
-
 describe('Test AggregationRepository Model', function () {
 
   before(function (done) {
