@@ -7,6 +7,23 @@ var fixtures = require('mongoose-fixtures'),
   options = { server: {socketOptions: { keepAlive: 1 } }}
   ;
 
+if (global.describe) {
+
+  var options = {};
+  options.server = {socketOptions: {keepAlive: 1}};
+  mongoose.connect('mongodb://localhost/aggregation', options);
+  var db = mongoose.connection;
+  db.on('error', function (err) {
+    console.error('unable to connect to database', err);
+    throw err;
+  });
+}
+
+if (!global.describe) {
+  global.describe = function () {
+  };
+}
+
 
 mongoose.connect('mongodb://localhost/aggregation', options);
 var db = mongoose.connection;

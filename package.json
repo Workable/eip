@@ -3,6 +3,7 @@
   "description": "Aggregattor Enterprise Integration Module",
   "version": "0.0.0",
   "dependencies": {
+    "amqplib": "^0.3.2",
     "async": "^1.2.0",
     "co": "^4.5.4",
     "log4js": "^0.6.25",
@@ -12,8 +13,8 @@
   "scripts": {
     "lint": "jshint .",
     "checkStyle": "jscs .",
-    "pretest": "npm run-script lint && npm run-script checkStyle",
-    "test": "istanbul cover ./node_modules/vows/bin/vows test/** --spec",
+    "pretest": "npm run-script lint",
+    "test": "node --harmony node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/vows/bin/vows test/* --spec",
     "test_new": "NODE_ENV=test PORT=9999 node --harmony node_modules/istanbul-harmony/lib/cli.js test ./node_modules/.bin/_mocha test/* --  -R spec -r co-mocha",
     "posttest": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage",
     "console": "node --harmony console.js"
@@ -27,7 +28,7 @@
     "co-mocha": "^1.1.0",
     "istanbul": "^0.3.8",
     "istanbul-harmony": "^0.3.12",
-    "jscs": "^1.6.1",
+    "jscs": "^1.13.1",
     "jshint": "^2.5.6",
     "mocha": "^2.2.1",
     "mongoose-fixtures": "0.0.1",

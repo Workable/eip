@@ -25,12 +25,15 @@ vows.describe('For simple asynchronous routes:').addBatch({
   'when sending two events to an interval aggregator': {
     topic: function() {
       var r = new eip.Route()
-        .aggregate({emitter: new eip.aggregator.Emitter.IntervalEmitter(1000)})
+        .aggregate({})
         .process(this.callback);
       var e1 = eip.util.createEvent("First event");
       var e2 = eip.util.createEvent("Second event");
       e1.headers.correlationId = e2.headers.correlationId = "some id";
       r.inject(e1);
+      r.inject(e2);
+      r.inject(e2);
+      r.inject(e2);
       r.inject(e2);
       r.shutDown();
     },
@@ -39,7 +42,7 @@ vows.describe('For simple asynchronous routes:').addBatch({
     },
     'the event is an array of two events': function (event, callback) {
       assert.isArray(event.body);
-      assert.lengthOf(event.body, 2);
+      assert.lengthOf(event.body, 5);
       assert.equal(event.body[0].body, "First event");
       assert.equal(event.body[1].body, "Second event");
     }

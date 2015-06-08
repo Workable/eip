@@ -1,3 +1,7 @@
+if(!global.describe) {
+  global.describe = function(){};
+}
+
 /*
 describe('aggregator-eip', function () {
 
