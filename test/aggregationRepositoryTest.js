@@ -1,14 +1,14 @@
 var fixtures = require('mongoose-fixtures'),
   mongoose = require('mongoose'),
   sinon = require('sinon'),
-  should = require('should'),
   sandbox = sinon.sandbox.create(),
   AggregationRepository = require('../lib/models/AggregationRepository'),
-  options = { server: {socketOptions: { keepAlive: 1 } }}
+  options = {server: {socketOptions: {keepAlive: 1}}}
   ;
 
-if (global.describe) {
+require('should')
 
+if (global.describe) {
   var options = {};
   options.server = {socketOptions: {keepAlive: 1}};
   mongoose.connect('mongodb://localhost/aggregation', options);
@@ -28,10 +28,9 @@ if (!global.describe) {
 mongoose.connect('mongodb://localhost/aggregation', options);
 var db = mongoose.connection;
 db.on('error', function (err) {
-  Log.error('unable to connect to database', err);
+  console.error('unable to connect to database', err);
   throw err;
 });
-
 
 
 describe('Test AggregationRepository Model', function () {
@@ -46,7 +45,7 @@ describe('Test AggregationRepository Model', function () {
   it('should add a new event', function * () {
     var data = yield AggregationRepository.add("192837", "Route3", {name: 'Darth Veider'});
     data.correlationId.should.equal('192837');
-    data.events.slice(0,1).pop().name.should.equal('Darth Veider');
+    data.events.slice(0, 1).pop().name.should.equal('Darth Veider');
   });
 
   it('should get the correlationId, contextId tuple', function * () {
@@ -62,22 +61,20 @@ describe('Test AggregationRepository Model', function () {
   });
 
   it('should change the status of the correlationId, contextId tuple to completed', function * () {
-    AggregationRepository.complete('123456', 'Route1').then(function * (){
-      var data = yield AggregationRepository.get('123456', 'Route1');
-      data.correlationId.should.equal('123456');
-      data.contextId.should.equal('Route1');
-      data.status.should.equal('completed');
-    });
+    yield AggregationRepository.complete('123456', 'Route1');
+    var data = yield AggregationRepository.get('123456', 'Route1');
+    data.correlationId.should.equal('123456');
+    data.contextId.should.equal('Route1');
+    data.status.should.equal('completed');
   });
 
   it('should change the status of the correlationI, contextId tuple to expired', function * () {
     //var data
-    AggregationRepository.expire('123456', 'Route1').then(function * (){
-      var data = yield AggregationRepository.get('123456', 'Route1');
-      data.correlationId.should.equal('123456');
-      data.contextId.should.equal('Route1');
-      data.status.should.equal('expired');
-    });
+    yield AggregationRepository.expire('123456', 'Route1');
+    var data = yield AggregationRepository.get('123456', 'Route1');
+    data.correlationId.should.equal('123456');
+    data.contextId.should.equal('Route1');
+    data.status.should.equal('expired');
   });
 
   it('should return keys for all entries of Route1', function * () {

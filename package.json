@@ -12,8 +12,8 @@
   },
   "scripts": {
     "lint": "jshint .",
-    "checkStyle": "jscs .",
-    "pretest": "npm run-script lint",
+    "checkStyle": "jscs . -e",
+    "pretest": "npm run-script lint && npm run-script checkStyle",
     "test": "node --harmony node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/vows/bin/vows test/* --spec",
     "test_new": "NODE_ENV=test PORT=9999 node --harmony node_modules/istanbul-harmony/lib/cli.js test ./node_modules/.bin/_mocha test/* --  -R spec -r co-mocha",
     "posttest": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage",
