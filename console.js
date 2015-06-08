@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
 
   global.eip = require('./lib/eip');
   global.aggregator = require('./lib/aggregator');
+  global.Timeout = require('./lib/timeout');
 
 //mongoose.connect('mongodb://localhost/aggregation', server);
 
