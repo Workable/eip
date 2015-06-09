@@ -21,7 +21,7 @@ describe("Timeout", function () {
     this.timeout = new Timeout({name: 'test'}, 0, this.cb);
   });
 
-  afterEach(function * () {
+  afterEach(function () {
     this.timeout.close();
     delete this.cb;
     delete this.timeout;
@@ -40,8 +40,7 @@ describe("Timeout", function () {
     yield this.timeout.inject.bind(this.timeout, 200);
     yield this.timeout.inject.bind(this.timeout, 300);
     yield wait(200);
-    console.log(this.cb.callCount);
-    //this.cb.calledTwice.should.be.ok;
+    this.cb.calledThrice.should.be.true;
     this.cb.args[0][0].should.eql('100');
     this.cb.args[1][0].should.eql('200');
     this.cb.args[2][0].should.eql('300');

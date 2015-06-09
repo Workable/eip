@@ -9,7 +9,7 @@ function wait(delay) {
   }
 }
 
-describe.only('Aggregator for simple asynchronous routes:', function () {
+describe('Aggregator for simple asynchronous routes:', function () {
   after(function () {
     sandbox.restore();
   });

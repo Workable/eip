@@ -26,6 +26,7 @@
   "nonew": true,
   "quotmark": false,
   "nonew": true,
+  "expr": true,
   "predef": [
     "describe",
     "it",
