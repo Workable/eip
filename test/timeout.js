@@ -39,7 +39,7 @@ describe("Timeout", function () {
     yield this.timeout.inject.bind(this.timeout, 100);
     yield this.timeout.inject.bind(this.timeout, 200);
     yield this.timeout.inject.bind(this.timeout, 300);
-    yield wait(200);
+    yield wait(10);
     this.cb.calledThrice.should.be.true;
     this.cb.args[0][0].should.eql('100');
     this.cb.args[1][0].should.eql('200');

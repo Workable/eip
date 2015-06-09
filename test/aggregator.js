@@ -68,10 +68,8 @@ describe('Aggregator for simple asynchronous routes:', function () {
       };
       var r = new eip.Route().aggregate().process(this.cb)
         , e1 = eip.util.createEvent('First event');
-      e1.type = 'setTimeout';
       e1.cb = function () {
         sandbox.clock.tick(60000);
-        sandbox.clock.restore();
       }.bind(this);
       r.inject(e1);
 
