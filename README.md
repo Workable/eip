@@ -17,11 +17,11 @@ npm install --save aggregator-eip
 
 ## Usage
 
-var Aggregator = require('aggregator-eip')
+var eip = require('aggregator-eip')
 
-var aggr = new Aggregator({ db: ''})
+var aggr = new eip.Route().aggregate({ db: '', queue: '', timeoutDelay: <ms>})
 
-Aggregator.register('newProcessor', processor)
+eip.Route.register('newProcessor', processor)
 
 aggr.newProcessor()
 
