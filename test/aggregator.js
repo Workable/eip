@@ -62,7 +62,7 @@ describe('Aggregator for simple asynchronous routes:', function () {
     });
     it('should timeout after 60 sec', function (done) {
       this.cb = function (event) {
-        event.body[0].type.should.equal('setTimeout');
+        event.body[0].body.should.equal('First event');
         r.shutDown();
         done();
       };
