@@ -1,7 +1,7 @@
 {
   "name": "aggregator-eip",
   "description": "Aggregattor Enterprise Integration Module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "dependencies": {
     "amqplib": "^0.3.2",
     "async": "^1.2.0",
