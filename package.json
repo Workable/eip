@@ -18,7 +18,8 @@
     "test_new": "NODE_ENV=test PORT=9999 node --harmony node_modules/istanbul-harmony/lib/cli.js test ./node_modules/.bin/_mocha test/* --  -R spec -r co-mocha",
     "posttest": "istanbul check-coverage --statements 85 --branches 70 --functions 100 --lines 90 && rm -rf coverage",
     "console": "node --harmony console.js",
-    "pack": "rm *.tgz && npm pack"
+    "prepack": "rm *.tgz",
+    "pack": "npm pack"
   },
   "publishConfig": {
     "registry": "http://registry.npmjs.org"
