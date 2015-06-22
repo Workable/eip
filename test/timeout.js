@@ -15,10 +15,9 @@ function wait(delay) {
 
 describe("Timeout", function () {
   beforeEach(function() {
-    Timeout.connect("amqp://localhost"); //should be tested with a local rabbitmq
     this.cb = sandbox.stub();
     this.cb.callsArg(1);
-    this.timeout = new Timeout({name: 'test'}, 0, this.cb);
+    this.timeout = new Timeout("amqp://localhost", {name: 'test'}, 0, this.cb);
   });
 
   afterEach(function () {
