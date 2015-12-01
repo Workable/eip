@@ -1,13 +1,14 @@
 {
   "name": "aggregator-eip",
   "description": "Aggregattor Enterprise Integration Module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "amqplib": "^0.3.2",
     "async": "^1.2.0",
     "co": "^4.5.4",
+    "kerberos": "0.0.17",
     "log4js": "^0.6.25",
-    "mongoose": "^4.0.4",
+    "mongoose": "^4.2.7",
     "uuid": "^2.0.1"
   },
   "scripts": {
