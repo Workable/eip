@@ -27,9 +27,10 @@ if (!global.describe) {
 
 describe('Test AggregationRepository Model', function () {
 
-  before(function (done) {
-    fixtures.load(__dirname + '/fixtures/', done());
+  beforeEach(function (done) {
+    fixtures.load(__dirname + '/fixtures/aggregationRepository.js', done);
   });
+
   afterEach(function () {
     sandbox.restore();
   });

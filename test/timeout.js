@@ -1,6 +1,6 @@
 var Timeout = require("../lib/timeout")
   , sinon = require('sinon')
-  , sandbox = sinon.sandbox.create({useFakeServer: true, useFakeTimers: false});
+  , sandbox = sinon.sandbox.create({ useFakeServer: true, useFakeTimers: false });
 require('should');
 
 if (!global.describe) {
@@ -14,27 +14,30 @@ function wait(delay) {
 }
 
 describe("Timeout", function () {
-  beforeEach(function() {
+
+  before(function () {
+    this.timeout = new Timeout("amqp://localhost", { name: 'test' }, 0, this.cb);
+  })
+
+  beforeEach(function () {
     this.cb = sandbox.stub();
     this.cb.callsArg(1);
-    this.timeout = new Timeout("amqp://localhost", {name: 'test'}, 0, this.cb);
+    this.timeout.cb = this.cb;
   });
 
-  afterEach(function () {
-    this.timeout.close();
+  afterEach(function* () {
     delete this.cb;
-    delete this.timeout;
     sandbox.restore();
   });
 
-  it('should timeout', function * () {
+  it('should timeout', function* () {
     yield this.timeout.inject.bind(this.timeout, 100);
     yield wait(10);
     this.cb.calledOnce.should.be.ok;
     this.cb.args[0][0].should.eql('100');
   });
 
-  it('should timeout twice', function * () {
+  it('should timeout twice', function* () {
     yield this.timeout.inject.bind(this.timeout, 100);
     yield this.timeout.inject.bind(this.timeout, 200);
     yield this.timeout.inject.bind(this.timeout, 300);
