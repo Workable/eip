@@ -40,7 +40,7 @@ describe('Test AggregationRepository Model', function () {
     data.correlationId.should.equal('192837');
     data.events.slice(0, 1).pop().name.should.equal('Darth Veider');
   });
-
+  
   it('should get the correlationId, contextId tuple', function * () {
     var data = yield AggregationRepository.get('123456', 'Route1');
     data.correlationId.should.equal('123456');
@@ -80,5 +80,18 @@ describe('Test AggregationRepository Model', function () {
     data[1].contextId.should.equal('Route1');
     data[1].events.length.should.equal(1);
   });
+  
+    it('should set the createdAt field when saving a new event', function * () {
+    var data = yield AggregationRepository.add("1928372", "Route3", {name: 'Darth Veider 2'});
+    var today = new Date();
+    data.correlationId.should.equal('1928372');
+    data.createdAt.should.be.ok;
+    (data.createdAt instanceof Date).should.equal(true);
+    data.createdAt.getHours().should.equal(today.getHours());
+    data.createdAt.getDay().should.equal(today.getDay());
+    data.createdAt.getMonth().should.equal(today.getMonth());
+    data.createdAt.getYear().should.equal(today.getYear());
+  });
+  
 });
 
