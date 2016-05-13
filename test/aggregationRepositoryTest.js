@@ -81,7 +81,7 @@ describe('Test AggregationRepository Model', function () {
     data[1].events.length.should.equal(1);
   });
   
-    it('should set the createdAt field when saving a new event', function * (done) {
+  it('should set the createdAt field when saving a new event', function * (done) {
     yield AggregationRepository.add("1928372", "Route3", {name: 'Darth Veider 2'});
     var today = new Date();
     AggregationRepository.collection.findOne({correlationId: '1928372'}, function (err, doc) {
