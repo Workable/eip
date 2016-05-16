@@ -81,16 +81,19 @@ describe('Test AggregationRepository Model', function () {
     data[1].events.length.should.equal(1);
   });
   
-    it('should set the createdAt field when saving a new event', function * () {
-    var data = yield AggregationRepository.add("1928372", "Route3", {name: 'Darth Veider 2'});
+  it('should set the createdAt field when saving a new event', function * (done) {
+    yield AggregationRepository.add("1928372", "Route3", {name: 'Darth Veider 2'});
     var today = new Date();
-    data.correlationId.should.equal('1928372');
-    data.createdAt.should.be.ok;
-    (data.createdAt instanceof Date).should.equal(true);
-    data.createdAt.getHours().should.equal(today.getHours());
-    data.createdAt.getDay().should.equal(today.getDay());
-    data.createdAt.getMonth().should.equal(today.getMonth());
-    data.createdAt.getYear().should.equal(today.getYear());
+    AggregationRepository.collection.findOne({correlationId: '1928372'}, function (err, doc) {
+      doc.correlationId.should.equal('1928372');
+      doc.createdAt.should.be.ok;
+      (doc.createdAt instanceof Date).should.equal(true);
+      doc.createdAt.getHours().should.equal(today.getHours());
+      doc.createdAt.getDay().should.equal(today.getDay());
+      doc.createdAt.getMonth().should.equal(today.getMonth());
+      doc.createdAt.getYear().should.equal(today.getYear());
+      done();
+    })
   });
   
 });

@@ -25,7 +25,7 @@ describe("Timeout", function () {
     this.timeout.cb = this.cb;
   });
 
-  afterEach(function* () {
+  afterEach(function () {
     delete this.cb;
     sandbox.restore();
   });
