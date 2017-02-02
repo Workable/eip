@@ -1,6 +1,7 @@
 .idea/*
 npm-debug.log
 node_modules
+.*_h
 coverage
 *.iml
 .vscode

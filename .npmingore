@@ -1,0 +1,8 @@
+src
+typings
+tslint.json
+tsconfig.json
+coverage
+test
+.*
+
