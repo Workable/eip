@@ -1,7 +1,5 @@
 import Store from './store';
-import * as Log from 'log4js';
-
-const logger = Log.getLogger('[aggregator-eip->memory-store]')
+import { getLogger } from '../../logger';
 
 export default class MemoryStore extends Store {
   private cache: Map<string, any>;
@@ -12,7 +10,7 @@ export default class MemoryStore extends Store {
   }
 
   append(id: string, headers: any, body?: any) {
-    const cache = this.cache.get(id) || { headers: {}, body: [] };
+    const cache = this.cache.get(id) || { headers: { status: Store.STATUS.INITIAL }, body: [] };
     Object.assign(cache.headers, headers);
     if (body) {
       cache.body.push(body);
@@ -23,20 +21,24 @@ export default class MemoryStore extends Store {
 
   setStatus(id: string, status: string) {
     const cache = this.cache.get(id);
+
     if (!cache) {
       if (status === Store.STATUS.TIMEOUT) {
-        logger.info(`[${id}] Already completed`);
+        getLogger().debug(`[memory-store] [${id}] Already completed`);
+        return;
       } else {
-        return Error(`No entry found for id ${id}`);
+        throw new Error(`No entry found for id ${id}`);
       }
     }
-    const {timesStatusChanged = 0} = cache.headers;
-    Object.assign(cache.headers, { timesStatusChanged: timesStatusChanged + 1, status });
+
+    const {aggregationNum = 0} = cache.headers;
+    Object.assign(cache.headers, { aggregationNum: aggregationNum + 1, status });
     if (status === Store.STATUS.COMPLETED) {
       this.cache.delete(id);
     } else {
       this.cache.set(id, cache);
     }
+    return cache;
   }
 
   getById(id: string) {

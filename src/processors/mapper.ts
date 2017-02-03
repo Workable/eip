@@ -9,6 +9,6 @@ export default class Mapper extends Processor {
   }
 
   async process(event) {
-      return await this.map(event);
+    return await this.map(event);
   }
 }
