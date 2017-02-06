@@ -40,7 +40,7 @@ export default class Route {
   private async processFirstProcessor(event) {
     const [processor] = this.processors;
     if (processor) {
-      await processor.inject(() => processor.process(event));
+      await processor.safeProcess(event);
     }
   }
 

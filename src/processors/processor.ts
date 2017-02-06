@@ -14,8 +14,12 @@ abstract class Processor extends EventEmmiter.EventEmitter {
     this.previous = previous;
 
     if (this.previous) {
-      this.previous.on('event', (event) => this.inject(() => this.process(event)));
+      this.previous.on('event', event => this.safeProcess(event));
     }
+  }
+
+  async safeProcess(event) {
+    await this.inject(() => this.process(event));
   }
 
   async inject(cb) {
