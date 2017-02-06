@@ -23,21 +23,22 @@ export default class MemoryStore extends Store {
     const cache = this.cache.get(id);
 
     if (!cache) {
-      if (status === Store.STATUS.TIMEOUT) {
-        getLogger().debug(`[memory-store] [${id}] Already completed`);
-        return;
-      } else {
-        throw new Error(`No entry found for id ${id}`);
-      }
+      throw new Error(`No entry found for id ${id}`);
     }
 
-    const {aggregationNum = 0} = cache.headers;
-    Object.assign(cache.headers, { aggregationNum: aggregationNum + 1, status });
+    let {aggregationNum = 0, timeoutNum = 0} = cache.headers;
+    if (status === Store.STATUS.TIMEOUT) {
+      timeoutNum += 1;
+    }
+
+    Object.assign(cache.headers, { aggregationNum: aggregationNum + 1, timeoutNum, status });
+
     if (status === Store.STATUS.COMPLETED) {
       this.cache.delete(id);
     } else {
       this.cache.set(id, cache);
     }
+
     return cache;
   }
 

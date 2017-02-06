@@ -31,9 +31,7 @@ export default class Aggregator extends Processor {
         getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] Already completed`);
         return;
       }
-      const event = { headers: { ...storedEvent.headers }, body: storedEvent.body };
-      event.headers.timeoutNum = attempt;
-      this.inject(() => this.aggregate(event, Store.STATUS.TIMEOUT));
+      this.inject(() => this.aggregate(storedEvent, Store.STATUS.TIMEOUT));
     });
   }
 
