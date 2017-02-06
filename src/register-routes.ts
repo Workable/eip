@@ -3,6 +3,7 @@ import Dispatcher from './processors/dispatcher';
 import Filter from './processors/filter';
 import Logger from './processors/logger';
 import Mapper from './processors/mapper';
+import Throttler from './processors/throttler';
 import Aggregator from './processors/aggregator';
 
 Route.register('dispatch', Dispatcher);
@@ -16,4 +17,5 @@ Route.register('error', Logger);
 Route.register('fatal', Logger);
 
 Route.register('process', Mapper);
+Route.register('throttle', Throttler);
 Route.register('aggregate', Aggregator);
