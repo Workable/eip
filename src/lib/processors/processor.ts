@@ -22,14 +22,18 @@ abstract class Processor extends EventEmmiter.EventEmitter {
     await this.inject(() => this.process(event));
   }
 
-  async inject(cb) {
+  async inject(cb, emitError = true) {
     try {
       const result = await cb();
       if (result !== undefined) {
         this.emit('event', result);
       }
     } catch (e) {
-      this.emit('error', e, cb);
+      if (emitError) {
+        this.emit('error', e, () => this.inject(cb, false));
+      } else {
+        throw e;
+      }
     }
   }
 

@@ -40,17 +40,20 @@ export default class Route {
     const [processor] = this.processors;
     if (processor) {
       await processor.safeProcess(event);
+    } else {
+      throw new Error(`[${this.name}] No processor is given`);
     }
   }
 
   async handleError(error, cb) {
     let attempts = 0;
-    while (attempts < config.route.retryLimit) {
+    while (attempts < this.options.route.retryLimit) {
       try {
-        this.logger.error(`${attempts} Retry limit not reached, try again in ${config.route.retryDelay} ms. Error ${error}`);
-        await new Promise(resolve => setTimeout(resolve, config.route.retryDelay));
+        this.logger.error(`${attempts} Retry limit not reached, try again in ${this.options.route.retryDelay} ms. Error ${error}`);
+        await new Promise(resolve => setTimeout(resolve, this.options.route.retryDelay));
         attempts += 1;
         await cb();
+        return;
       } catch (e) {
         error = e;
       }
