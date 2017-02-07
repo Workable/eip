@@ -6,8 +6,7 @@ const config = {
     retryLimit: 3,
     retryDelay: 1000
   },
-  isErrorRoute: false,
-  processor: {}
+  isErrorRoute: false
 };
 
 export default class Route {
@@ -44,6 +43,21 @@ export default class Route {
     }
   }
 
+  async handleError(error, cb) {
+    let attempts = 0;
+    while (attempts < config.route.retryLimit) {
+      try {
+        this.logger.error(`${attempts} Retry limit not reached, try again in ${config.route.retryDelay} ms. Error ${error}`);
+        await new Promise(resolve => setTimeout(resolve, config.route.retryDelay));
+        attempts += 1;
+        await cb();
+      } catch (e) {
+        error = e;
+      }
+    }
+    this.errorRoute.inject({ _error: error });
+  }
+
   static register(name, Processor) {
     Route.prototype[name] = function (...args) {
       const processor = new Processor({
@@ -52,20 +66,7 @@ export default class Route {
         id: `${this.name}(${name}-${this.processors.length})`,
         previous: this.processors[this.processors.length - 1]
       });
-      processor.on('error', async (error, cb) => {
-        let attempts = 0;
-        while (attempts < config.route.retryLimit) {
-          try {
-            this.logger.error(`${attempts} Retry limit not reached, try again in ${config.route.retryDelay} ms. Error ${error}`);
-            await new Promise(resolve => setTimeout(resolve, config.route.retryDelay));
-            attempts += 1;
-            await cb();
-          } catch (e) {
-            error = e;
-          }
-        }
-        this.errorRoute.inject({ _error: error });
-      });
+      processor.on('error', async (error, cb) => await this.handleError(error, cb));
       this.processors.push(processor);
       return this;
     };
