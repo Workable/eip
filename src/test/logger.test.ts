@@ -2,7 +2,7 @@
 import * as logger from '../lib/logger';
 import * as log4js from 'log4js';
 
-describe('Test logger', function () {
+describe('Logger', function () {
   it('should inialize logger with name aggregator-eip', function () {
     logger.init(null);
     logger.getLogger().should.eql(log4js.getLogger('[aggregator-eip]'));

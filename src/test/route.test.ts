@@ -83,7 +83,7 @@ describe('Route', function () {
       ]);
     });
 
-    it('should retry failing processor and faild', async function () {
+    it('should retry failing processor and fail', async function () {
       const stub = sandbox.stub();
       const stub2 = sandbox.stub();
       stub.onCall(0).returns(Promise.reject('test error'));
