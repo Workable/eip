@@ -1,6 +1,5 @@
 import Dispatcher from '../../lib/processors/dispatcher';
 import * as sinon from 'sinon';
-import * as should from 'should';
 
 const sandbox = sinon.sandbox.create();
 

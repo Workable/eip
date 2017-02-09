@@ -1,6 +1,5 @@
 import Logger from '../../lib/processors/logger';
 import * as sinon from 'sinon';
-import * as should from 'should';
 import { getLogger } from '../../lib/logger';
 
 const sandbox = sinon.sandbox.create();
@@ -8,7 +7,7 @@ const sandbox = sinon.sandbox.create();
 describe('Logger', function () {
   let logger;
   let cbFn;
-  let loggerStub;
+  let loggerStub: sinon.SinonStub;
 
   beforeEach(function () {
     cbFn = sandbox.stub();

@@ -10,13 +10,15 @@ export default class Throttler extends Processor {
     super(options);
     this.eventsPerPeriod = this.input[0];
     this.periodInMS = this.input[1] || 1000;
-    this.on('processed', () => {
-      if (this.queue.length > 0) {
-        var event = this.queue.shift();
-        this.addEvent();
-        this.inject(() => event);
-      }
-    });
+    this.on('processed', () => this.processQueue());
+  }
+
+  processQueue() {
+    if (this.queue.length > 0) {
+      var event = this.queue.shift();
+      this.addEvent();
+      this.inject(() => event);
+    }
   }
 
   async wait(ms: number) {
