@@ -9,7 +9,7 @@ describe('Mapper', function () {
   beforeEach(function () {
     mapFn = sandbox.stub();
     mapper = new Mapper({ id: 'id', input: [mapFn], name: 'name', previous: null });
-  })
+  });
 
   describe('process', function () {
     it('should call map and return result', async function () {

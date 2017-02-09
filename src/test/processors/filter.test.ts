@@ -11,7 +11,7 @@ describe('Filter', function () {
   beforeEach(function () {
     filterFn = sandbox.stub();
     filter = new Filter({ id: 'id', input: [filterFn], name: 'name', previous: null });
-  })
+  });
 
   describe('process', function () {
     it('should call filter and return event', async function () {
