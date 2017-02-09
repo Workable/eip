@@ -11,5 +11,6 @@ export default class Dispatcher extends Processor {
 
   async process(event) {
     await Promise.all(this.routes.map(route => route.inject(event)));
+    return event;
   }
 }
