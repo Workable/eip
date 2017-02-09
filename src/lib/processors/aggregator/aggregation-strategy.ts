@@ -2,7 +2,7 @@ import * as EventEmmiter from 'events';
 import Store from './store';
 
 abstract class AggregationStrategy extends EventEmmiter.EventEmitter {
-  abstract async check(event);
+  abstract async process(event);
 
   inject(event, status = Store.STATUS.COMPLETED) {
     this.emit('event', event, status);

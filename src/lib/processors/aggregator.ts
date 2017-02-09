@@ -60,6 +60,6 @@ export default class Aggregator extends Processor {
     if (body.length === 1) {
       this.timer.start(this.getId(event));
     }
-    await this.strategy.check({ body, headers });
+    await this.strategy.process({ body, headers });
   }
 }
