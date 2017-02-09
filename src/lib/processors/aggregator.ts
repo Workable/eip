@@ -21,8 +21,7 @@ export default class Aggregator extends Processor {
     this.timer = <any>timer;
 
     this.strategy.on('event', (event, status) => this.inject(() => {
-      const {headers, body} = event;
-      this.inject(() => this.aggregate({ headers: { ...headers }, body }, status));
+      this.inject(() => this.aggregate(this.cloneHeaders(event), status));
     }));
 
     this.timer.on('event', (id, attempt) => {
@@ -31,8 +30,12 @@ export default class Aggregator extends Processor {
         getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] Already completed`);
         return;
       }
-      this.inject(() => this.aggregate(storedEvent, Store.STATUS.TIMEOUT));
+      this.inject(() => this.aggregate(this.cloneHeaders(storedEvent), Store.STATUS.TIMEOUT));
     });
+  }
+
+  cloneHeaders(event) {
+    return { headers: { ...event.headers }, body: event.body };
   }
 
   getId(event) {
@@ -51,7 +54,7 @@ export default class Aggregator extends Processor {
     const storedEvent = await this.store.setStatus(this.getId(event), status);
     if (storedEvent) {
       const {body, headers} = storedEvent;
-      return { body, headers: { ...event.headers, ...headers, previousStatus: event.headers.status } };
+      return { body, headers: { ...headers, previousStatus: event.headers.status } };
     }
   }
 
