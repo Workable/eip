@@ -1,5 +1,4 @@
 import Store from './store';
-import { getLogger } from '../../logger';
 
 export default class MemoryStore extends Store {
   private cache: Map<string, any>;
@@ -12,9 +11,7 @@ export default class MemoryStore extends Store {
   append(id: string, headers: any, body?: any) {
     const cache = this.cache.get(id) || { headers: { status: Store.STATUS.INITIAL }, body: [] };
     Object.assign(cache.headers, headers);
-    if (body) {
-      cache.body.push(body);
-    }
+    cache.body.push(body);
     this.cache.set(id, cache);
     return cache;
   }

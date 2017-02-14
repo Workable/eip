@@ -20,9 +20,9 @@ export default class Aggregator extends Processor {
     this.store = store;
     this.timer = <any>timer;
 
-    this.strategy.on('event', (event, status) => this.inject(() => {
-      this.inject(() => this.aggregate(this.cloneHeaders(event), status));
-    }));
+    this.strategy.on('event', (event, status) =>
+      this.inject(() => this.aggregate(this.cloneHeaders(event), status))
+    );
 
     this.timer.on('event', (id, attempt) => {
       const storedEvent = this.store.getById(id);
@@ -51,11 +51,8 @@ export default class Aggregator extends Processor {
   }
 
   async aggregate(event, status) {
-    const storedEvent = await this.store.setStatus(this.getId(event), status);
-    if (storedEvent) {
-      const {body, headers} = storedEvent;
-      return { body, headers: { ...headers, previousStatus: event.headers.status } };
-    }
+    const {body, headers} = await this.store.setStatus(this.getId(event), status);
+    return { body, headers: { ...headers, previousStatus: event.headers.status } };
   }
 
   async process(event) {
