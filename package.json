@@ -1,6 +1,6 @@
 {
-  "name": "aggregator-eip",
-  "description": "Aggregattor Enterprise Integration Module",
+  "name": "eip",
+  "description": "Enterprise Integration Patterns Module for javascript",
   "version": "1.0.0",
   "dependencies": {
     "log4js": "^1.1.0"
@@ -23,7 +23,7 @@
     "Nikos Dimos <dimos@workable.com>",
     "Panos Matzavinos <matzavinos@workable.com>"
   ],
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "source-map-support": "^0.4.5",
     "@types/uuid": "2.0.29",
@@ -46,6 +46,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:nikosd23/aggregator-eip.git"
+    "url": "Workable/eip"
   }
 }

@@ -2,59 +2,23 @@
 
 Aggregator Enterprise Integration Module
 
-This repo enhances Aggregator Functionality and is based on this library:
-
-https://github.com/jkanschik/node-eip
-
-[![build status](https://secure.travis-ci.org/nikosd23/aggregator-eip.svg)](http://travis-ci.org/nikosd23/aggregator-eip)
-[![dependency status](https://david-dm.org/nikosd23/aggregator-eip.svg)](https://david-dm.org/nikosd23/aggregator-eip)
+This repo is based on [jkanschik/node-eip](https://github.com/jkanschik/node-eip) implements various eip patterns for javascript and mainly enhances the aggregator functionality.
 
 ## Installation
 
 ```
-npm install --save aggregator-eip
+npm install --save eip
 ```
 
 ## Usage
 
-var eip = require('aggregator-eip')
-
-var aggr = new eip.Route().aggregate({ db: '', queue: '', timeoutDelay: <ms>})
-
-eip.Route.register('newProcessor', processor)
-
-aggr.newProcessor()
-
-
-## To locally test your repository functions
-
-
-
- Promise = require('promise');
-
- Promise.prototype.async = function () {
- var result = {};
- this.then(function (data) {
- result.data = data;
- }, function (error) {
- result.error = error.stack;
- });
- return result;
- };
-
- var options = { db: 'mongodb://localhost/dev-development', server: {socketOptions: { keepAlive: 1 } } };
- var mongoose = require('mongoose');
- mongoose.connect(options.db, options.server);
-
- agg = require('./lib/models/AggregationRepository')
-
- var a = agg.add('123',{name:'Nikos Dimos'}).async()
-
- // How to start with debugger in tests:
- node debug --harmony ./node_modules/.bin/_mocha
-
-
+```javascript
+const eip = require('eip');
+const aggregator = new eip.Route().aggregate();
+eip.Route.register('newProcessor', processor);
+aggregator.newProcessor();
+```
 
 ## License
 
-ISC
+MIT
