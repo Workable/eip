@@ -1,6 +1,6 @@
 {
   "name": "eip",
-  "description": "Enterprise Integration Patterns Module for javascript",
+  "description": "Enterprise Integration Patterns for javascript",
   "version": "1.0.0",
   "dependencies": {
     "log4js": "^1.1.0"

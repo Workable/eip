@@ -1,6 +1,6 @@
 # aggregator-eip
 
-Aggregator Enterprise Integration Module
+Enterprise Integration Patterns for javascript.
 
 This repo is based on [jkanschik/node-eip](https://github.com/jkanschik/node-eip) implements various eip patterns for javascript and mainly enhances the aggregator functionality.
 
