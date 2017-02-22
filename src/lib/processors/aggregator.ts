@@ -15,7 +15,8 @@ export default class Aggregator extends Processor {
   constructor(options) {
     super(options);
     const {timeout = [1000]} = this.input[0] || {};
-    const {strategy = new MaxNumStrategy(3), store = new MemoryStore(), timer = new MemoryTimer(timeout) } = this.input[0] || {};
+    const {maxTimes = 3} = this.input[0] || {};
+    const {strategy = new MaxNumStrategy(maxTimes), store = new MemoryStore(), timer = new MemoryTimer(timeout) } = this.input[0] || {};
     this.strategy = strategy;
     this.store = store;
     this.timer = <any>timer;

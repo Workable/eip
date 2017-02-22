@@ -1,10 +1,12 @@
 import Aggregator from '../../lib/processors/aggregator';
 import { init, getLogger } from '../../lib/logger';
+import * as MemoryTimer from '../../lib/processors/aggregator/memory-timer';
+import * as MaxNumStrategy from '../../lib/processors/aggregator/max-num-strategy';
 
 import * as sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
-describe('Filter', function () {
+describe('Aggregator', function () {
 
   before(function () {
     init();
@@ -19,11 +21,24 @@ describe('Filter', function () {
       new Aggregator({ input: [] });
     });
 
+    it('should use maxTimes and timeout', function () {
+      const timerStub = sandbox.stub(MemoryTimer, 'default').returns({ on: sandbox.stub() });
+      const strategyStub = sandbox.stub(MaxNumStrategy, 'default').returns({ on: sandbox.stub() });
+      new Aggregator({ input: [{ maxTimes: 100, timeout: [1, 2, 3] }] });
+
+      timerStub.args.should.eql([
+        [[1, 2, 3]]
+      ]);
+      strategyStub.args.should.eql([
+        [100]
+      ]);
+    });
+
     it('should listen for timer and strategy events', function () {
       const strategy = { on: sandbox.stub() };
       const timer = { on: sandbox.stub() };
 
-      const aggregator = new Aggregator({ input: [{ strategy, timer }] });
+      new Aggregator({ input: [{ strategy, timer }] });
 
       strategy.on.calledOnce.should.be.true();
       strategy.on.args.should.containDeep([
@@ -138,7 +153,7 @@ describe('Filter', function () {
       const aggregator = new Aggregator({ input: [{ store }] });
 
       const result = await aggregator.aggregate({ headers: { status: 'TIMEOUT' } }, 'COMPLETED');
-      result.should.eql({ headers: { id: 1, status: 'COMPLETED', previousStatus: 'TIMEOUT' }, body: ['body'] })
+      result.should.eql({ headers: { id: 1, status: 'COMPLETED', previousStatus: 'TIMEOUT' }, body: ['body'] });
     });
   });
 });

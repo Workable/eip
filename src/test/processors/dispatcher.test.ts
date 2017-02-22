@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 
 const sandbox = sinon.sandbox.create();
 
-describe('Filter', function () {
+describe('Dispatcher', function () {
   let dispatcher;
   let routes;
 

@@ -3,7 +3,7 @@ import * as sinon from 'sinon';
 
 const sandbox = sinon.sandbox.create();
 
-describe('Filter', function () {
+describe('Throttler', function () {
   let dispatcher;
   let injectStub: sinon.SinonStub;
   let timers: sinon.SinonFakeTimers;
