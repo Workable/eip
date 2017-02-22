@@ -25,6 +25,4 @@ describe('AggragationStrategy', function () {
       [{ body: [1, 2] }]
     ]);
   });
-
-
 });
