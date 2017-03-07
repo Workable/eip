@@ -6,7 +6,7 @@
     "log4js": "^1.1.0"
   },
   "main": "build/lib/index.js",
-  "typings": "build/index",
+  "typings": "build/lib/index",
   "scripts": {
     "clean": "rm -rf ./build",
     "prebuild": "npm run clean",
