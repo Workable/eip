@@ -1,14 +1,14 @@
 import Store from './store';
 
 export default class MemoryStore extends Store {
-  private cache: Map<string, any>;
+  private cache: Map<string, { headers: any, body: any }>;
 
   constructor() {
     super();
     this.cache = new Map();
   }
 
-  append(id: string, headers: any, body?: any) {
+  async append(id: string, headers: any, body?: any) {
     const cache = this.cache.get(id) || { headers: { status: Store.STATUS.INITIAL }, body: [] };
     Object.assign(cache.headers, headers);
     cache.body.push(body);
@@ -16,14 +16,14 @@ export default class MemoryStore extends Store {
     return cache;
   }
 
-  setStatus(id: string, status: string) {
+  async setStatus(id: string, status: string) {
     const cache = this.cache.get(id);
 
     if (!cache) {
       throw new Error(`No entry found for id ${id}`);
     }
 
-    let {aggregationNum = 0, timeoutNum = 0} = cache.headers;
+    let { aggregationNum = 0, timeoutNum = 0 } = cache.headers;
     if (status === Store.STATUS.TIMEOUT) {
       timeoutNum += 1;
     }
@@ -39,7 +39,7 @@ export default class MemoryStore extends Store {
     return cache;
   }
 
-  getById(id: string) {
+  async getById(id: string) {
     return this.cache.get(id);
   }
 }

@@ -69,7 +69,7 @@ describe('Aggregator', function () {
       ]);
     });
 
-    it('should call inject and aggregate on timer event', function () {
+    it('should call inject and aggregate on timer event', async function () {
       const timer = { on: sandbox.stub() };
       const event = { headers: { id: 1 }, body: 'body' };
 
@@ -79,7 +79,7 @@ describe('Aggregator', function () {
       const injectStub = sandbox.stub(aggregator, 'inject');
       const aggregateStub = sandbox.stub(aggregator, 'aggregate');
 
-      timer.on.args[0][1](1, 2);
+      await timer.on.args[0][1](1, 2);
 
       store.getById.args.should.eql([
         [1]
@@ -95,7 +95,7 @@ describe('Aggregator', function () {
     });
 
     context('when timeouts but is already completed', function () {
-      it('should call inject and aggregate on timer event and log error', function () {
+      it('should call inject and aggregate on timer event and log error', async function () {
         const timer = { on: sandbox.stub() };
         const debugStub = sandbox.stub(getLogger(), 'debug');
 
@@ -103,7 +103,7 @@ describe('Aggregator', function () {
 
         new Aggregator({ input: [{ timer, store }] });
 
-        timer.on.args[0][1](1, 2);
+        await timer.on.args[0][1](1, 2);
 
         debugStub.args.should.eql([
           ['[undefined] [timeout-2] [1] Already completed']

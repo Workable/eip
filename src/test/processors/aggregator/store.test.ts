@@ -5,9 +5,9 @@ const sandbox = sinon.sandbox.create();
 
 describe('Store', function () {
   class StoreTest extends Store {
-    getById() { return; }
-    append() { return; }
-    setStatus() { return; }
+    async getById() { return; }
+    async append() { return; }
+    async setStatus() { return; }
   }
 
   afterEach(function () {

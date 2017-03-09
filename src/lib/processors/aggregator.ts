@@ -25,8 +25,8 @@ export default class Aggregator extends Processor {
       this.inject(() => this.aggregate(this.cloneHeaders(event), status))
     );
 
-    this.timer.on('event', (id, attempt) => {
-      const storedEvent = this.store.getById(id);
+    this.timer.on('event', async (id, attempt) => {
+      const storedEvent = await this.store.getById(id);
       if (!storedEvent || storedEvent.headers.status === Store.STATUS.COMPLETED) {
         getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] Already completed`);
         return;

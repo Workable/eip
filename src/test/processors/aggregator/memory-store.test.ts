@@ -4,7 +4,7 @@ import * as should from 'should';
 import * as sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
-describe('Timer', function () {
+describe('MemoryStore', function () {
   let store: MemoryStore;
 
   beforeEach(function () {
@@ -16,18 +16,18 @@ describe('Timer', function () {
   });
 
   describe('append', function () {
-    it('should append to new store', function () {
+    it('should append to new store', async function () {
       store.append('1', { id: '1', test: true }, { body: true });
-      store.getById('1').should.eql({
+      (await store.getById('1')).should.eql({
         headers: { id: '1', test: true, status: 'INITIAL' },
         body: [{ body: true }]
       });
     });
 
-    it('should append and add headers to existing store', function () {
-      store.append('1', { id: '1', test: true, another: false }, { body: true });
-      store.append('1', { id: '1', test: false, test2: true }, { body2: true });
-      store.getById('1').should.eql({
+    it('should append and add headers to existing store', async function () {
+      await store.append('1', { id: '1', test: true, another: false }, { body: true });
+      await store.append('1', { id: '1', test: false, test2: true }, { body2: true });
+      (await store.getById('1')).should.eql({
         headers: { id: '1', test: false, status: 'INITIAL', test2: true, another: false },
         body: [{ body: true }, { body2: true }]
       });
@@ -35,38 +35,40 @@ describe('Timer', function () {
   });
 
   describe('setStatus', function () {
-    it('should throw error for non existing record', function () {
-      should.throws(() => store.setStatus('1', 'TEST'), /No entry found for id 1/);
+    it('should throw error for non existing record', async function () {
+      await store.setStatus('1', 'TEST')
+        .then(d => should.equal(d, undefined))
+        .catch(e => e.should.eql(new Error('No entry found for id 1')));
     });
 
-    it('should update status and return', function () {
-      store.append('1', { id: '1', test: true }, { body: true });
-      const cache = store.setStatus('1', 'TEST');
+    it('should update status and return', async function () {
+      await store.append('1', { id: '1', test: true }, { body: true });
+      const cache = await store.setStatus('1', 'TEST');
       cache.should.eql({
         headers: { id: '1', test: true, status: 'TEST', aggregationNum: 1, timeoutNum: 0 },
         body: [{ body: true }]
       });
-      store.getById('1').should.equal(cache);
+      (await store.getById('1')).should.equal(cache);
     });
 
-    it('should update status and timeoutNum', function () {
-      store.append('1', { id: '1', test: true }, { body: true });
-      const cache = store.setStatus('1', 'TIMEOUT');
+    it('should update status and timeoutNum', async function () {
+      await store.append('1', { id: '1', test: true }, { body: true });
+      const cache = await store.setStatus('1', 'TIMEOUT');
       cache.should.eql({
         headers: { id: '1', test: true, status: 'TIMEOUT', aggregationNum: 1, timeoutNum: 1 },
         body: [{ body: true }]
       });
-      store.getById('1').should.equal(cache);
+      (await store.getById('1')).should.equal(cache);
     });
 
-    it('should update status to COMPLETED and delete it from cache', function () {
-      store.append('1', { id: '1', test: true }, { body: true });
-      const cache = store.setStatus('1', 'COMPLETED');
+    it('should update status to COMPLETED and delete it from cache', async function () {
+      await store.append('1', { id: '1', test: true }, { body: true });
+      const cache = await store.setStatus('1', 'COMPLETED');
       cache.should.eql({
         headers: { id: '1', test: true, status: 'COMPLETED', aggregationNum: 1, timeoutNum: 0 },
         body: [{ body: true }]
       });
-      should.equal(undefined, store.getById('1'));
+      should.equal(undefined, await store.getById('1'));
     });
   });
 });
