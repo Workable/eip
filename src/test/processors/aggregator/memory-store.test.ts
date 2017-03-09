@@ -17,7 +17,7 @@ describe('MemoryStore', function () {
 
   describe('append', function () {
     it('should append to new store', async function () {
-      store.append('1', { id: '1', test: true }, { body: true });
+      await store.append('1', { id: '1', test: true }, { body: true });
       (await store.getById('1')).should.eql({
         headers: { id: '1', test: true, status: 'INITIAL' },
         body: [{ body: true }]
@@ -37,7 +37,6 @@ describe('MemoryStore', function () {
   describe('setStatus', function () {
     it('should throw error for non existing record', async function () {
       await store.setStatus('1', 'TEST')
-        .then(d => should.equal(d, undefined))
         .catch(e => e.should.eql(new Error('No entry found for id 1')));
     });
 
