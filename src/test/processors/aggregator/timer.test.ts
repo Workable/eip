@@ -15,10 +15,10 @@ describe('Timer', function () {
   it('should emit event with id and attempt number', function () {
     const timer = new TimerTest([1, 2]);
     const emitStub = sandbox.stub(timer, 'emit');
-    timer.inject(1, 1);
+    timer.inject(1, 1, 1);
 
     emitStub.args.should.eql([
-      ['event', 1, 1]
+      ['event', 1, 1, 1]
     ]);
   });
 });
