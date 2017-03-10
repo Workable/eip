@@ -39,8 +39,8 @@ route.inject(2);
 ### Builtin Processors
 
 ```javascript
-aggregate({timout=[1000], maxTimes=3}) // or
-aggregate({timer= new Timer(), store = new Store(), strategy = new AggregationStrategy()})
+aggregate({ timeout = [1000], maxTimes = 3 }) // or
+aggregate({ timer= new Timer(), store = new Store(), strategy = new AggregationStrategy() })
 // Timer, Store and AggregationStrategy are abstract classes exported by eip that can be extended.
 // see eip-mongo and eip-rabbit for implementations of Timer on top of rabbitmq and Store on top of mongo
 
@@ -67,7 +67,7 @@ event => 'message to be logged:' + event;
 ## Aggregator example
 
 ```javascript
-const aggregator = new eip.Route().aggregate({timeout: [1000], maxTimes: 3}).info();
+const aggregator = new eip.Route().aggregate({ timeout: [1000], maxTimes: 3 }).info();
 
 aggregator.inject({
   headers: {
@@ -92,12 +92,13 @@ aggregator.inject({
 
 
 // it will be aggregated and log to output:
-[2017-03-10 16:32:07.605] [INFO] [aggregator-eip] - [Route-1(info-1)] {"body":["one","two","three"],"headers":{"status":"COMPLETED","id":"the id to aggregate data","param":"two","anotherParam":"other","aggregationNum":1,"timeoutNum":0,"previousStatus":"INITIAL"}}
-[2017-03-10 16:32:08.606] [DEBUG] [aggregator-eip] - [Route-1(aggregate-0)] [timeout-1] [1] Already completed
+// [2017-03-10 16:32:07.605] [INFO] [aggregator-eip] - [Route-1(info-1)] {"body":["one","two","three"],"headers":{"status":"COMPLETED","id":"the id to aggregate data","param":"two","anotherParam":"other","aggregationNum":1,"timeoutNum":0,"previousStatus":"INITIAL"}}
+// [2017-03-10 16:32:08.606] [DEBUG] [aggregator-eip] - [Route-1(aggregate-0)] [timeout-1] [1] Already completed
 
 
 // we could have formatted the output using:
 aggregator.info(aggregated => JSON.stringify(aggregated, null, 2));
+/*
 [2017-03-10 16:38:05.484] [INFO] [aggregator-eip] - [Route-1(info-2)] {
   "body": [
     "one",
@@ -115,6 +116,7 @@ aggregator.info(aggregated => JSON.stringify(aggregated, null, 2));
   }
 }
 [2017-03-10 16:38:06.152] [DEBUG] [aggregator-eip] - [Route-1(aggregate-0)] [timeout-1] [the id to aggregate data] Already completed
+*/
 ```
 
 ## License
