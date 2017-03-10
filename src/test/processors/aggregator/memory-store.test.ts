@@ -37,7 +37,7 @@ describe('MemoryStore', function () {
   describe('setStatus', function () {
     it('should throw error for non existing record', async function () {
       await store.setStatus('1', 'TEST')
-        .catch(e => e.should.eql(new Error('No entry found for id 1')));
+        .catch(e => e.should.eql(new Error('No entry found for id \'1\'')));
     });
 
     it('should update status and return', async function () {

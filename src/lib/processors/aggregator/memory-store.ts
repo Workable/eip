@@ -10,9 +10,10 @@ export default class MemoryStore extends Store {
 
   async append(id: string, headers: any, body?: any) {
     const cache = this.cache.get(id) || { headers: { status: Store.STATUS.INITIAL }, body: [] };
-    Object.assign(cache.headers, headers);
+    cache.body = cache.body.slice();
+    cache.headers = Object.assign({}, cache.headers, headers);
     cache.body.push(body);
-    this.cache.set(id, cache);
+    this.cache.set(id, Object.assign({}, cache));
     return cache;
   }
 
@@ -20,7 +21,7 @@ export default class MemoryStore extends Store {
     const cache = this.cache.get(id);
 
     if (!cache) {
-      throw new Error(`No entry found for id ${id}`);
+      throw new Error(`No entry found for id '${id}'`);
     }
 
     let { aggregationNum = 0, timeoutNum = 0 } = cache.headers;
