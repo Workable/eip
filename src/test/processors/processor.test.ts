@@ -112,7 +112,11 @@ describe('Processor', function () {
 
     it('should run cb and emit error', async function () {
       cbStub.throws(new Error('test'));
-      await test.inject(cbStub);
+      try {
+        await test.inject(cbStub);
+      } catch (e) {
+        e.should.eql(new Error('test'));
+      }
 
       cbStub.calledOnce.should.be.true();
       cbStub.args.should.eql([[]]);

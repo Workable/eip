@@ -6,7 +6,7 @@ abstract class Processor extends EventEmmiter.EventEmitter {
   protected input: any[];
   protected previous: Processor;
 
-  constructor({name, input, id, previous}) {
+  constructor({ name, input, id, previous }) {
     super();
     this.name = name;
     this.input = input;
@@ -31,6 +31,7 @@ abstract class Processor extends EventEmmiter.EventEmitter {
     } catch (e) {
       if (emitError) {
         this.emit('error', e, () => this.inject(cb, false));
+        throw e;
       } else {
         throw e;
       }

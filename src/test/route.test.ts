@@ -28,7 +28,7 @@ describe('Route', function () {
       route = new Route('test-route');
       try {
         await route.inject('test input');
-      } catch(e) {
+      } catch (e) {
         e.should.eql(new Error('[test-route] No processor is given'));
       }
     })
@@ -62,11 +62,15 @@ describe('Route', function () {
     it('should retry failing processor', async function () {
       const stub = sandbox.stub();
       const stub2 = sandbox.stub();
-      stub.onCall(0).returns(Promise.reject('test error'));
-      stub.onCall(1).returns(Promise.reject('test error 2'));
+      stub.onCall(0).returns(Promise.reject(new Error('test error')));
+      stub.onCall(1).returns(Promise.reject(new Error('test error 2')));
       stub.onCall(2).returns(Promise.resolve('input transformed'));
       route = (<any>new Route('test', config)).test(stub).test(stub2);
-      await route.inject('test input');
+      try {
+        await route.inject('test input');
+      } catch (e) {
+        e.should.eql(new Error('test error'));
+      }
 
       await new Promise(resolve => setTimeout(resolve, 30));
 
@@ -86,12 +90,16 @@ describe('Route', function () {
     it('should retry failing processor and fail', async function () {
       const stub = sandbox.stub();
       const stub2 = sandbox.stub();
-      stub.onCall(0).returns(Promise.reject('test error'));
-      stub.onCall(1).returns(Promise.reject('test error 2'));
-      stub.onCall(2).returns(Promise.reject('test error 3'));
-      stub.onCall(3).returns(Promise.reject('test error 4'));
+      stub.onCall(0).returns(Promise.reject(new Error('test error')));
+      stub.onCall(1).returns(Promise.reject(new Error('test error 2')));
+      stub.onCall(2).returns(Promise.reject(new Error('test error 3')));
+      stub.onCall(3).returns(Promise.reject(new Error('test error 4')));
       route = (<any>new Route('test', config)).test(stub).test(stub2);
-      await route.inject('test input');
+      try {
+        await route.inject('test input');
+      } catch (e) {
+        e.should.eql(new Error('test error'));
+      }
 
       await new Promise(resolve => setTimeout(resolve, 50));
 
