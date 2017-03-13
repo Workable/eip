@@ -14,9 +14,9 @@ export default class Aggregator extends Processor {
 
   constructor(options) {
     super(options);
-    const {timeout = [1000]} = this.input[0] || {};
-    const {maxTimes = 3} = this.input[0] || {};
-    const {strategy = new MaxNumStrategy(maxTimes), store = new MemoryStore(), timer = new MemoryTimer(timeout) } = this.input[0] || {};
+    const { timeout = [1000] } = this.input[0] || {};
+    const { maxTimes = 3 } = this.input[0] || {};
+    const { strategy = new MaxNumStrategy(maxTimes), store = new MemoryStore(), timer = new MemoryTimer(timeout) } = this.input[0] || {};
     this.strategy = strategy;
     this.store = store;
     this.timer = <any>timer;
@@ -53,12 +53,14 @@ export default class Aggregator extends Processor {
   }
 
   async aggregate(event, status) {
-    const {body, headers} = await this.store.setStatus(this.getId(event), status);
+    const { body, headers } = await this.store.setStatus(this.getId(event), status);
+    getLogger().debug(`[${this.id}] [${headers.id}] [aggregation-${headers.aggregationNum}] \
+[timeout-${headers.timeoutNum}] Aggregating event with status ${status}`);
     return { body, headers: { ...headers, previousStatus: event.headers.status } };
   }
 
   async process(event) {
-    const {body, headers} = await this.store.append(this.getId(event), this.getHeaders(event), this.getBody(event));
+    const { body, headers } = await this.store.append(this.getId(event), this.getHeaders(event), this.getBody(event));
     if (body.length === 1) {
       this.timer.start(this.getId(event));
     }

@@ -154,12 +154,24 @@ describe('Aggregator', function () {
 
   describe('aggregate', function () {
     it('should set status and return updated event', async function () {
-      const aggrEvent = { headers: { id: 1, status: 'COMPLETED' }, body: ['body'] };
+      const aggrEvent = { headers: { id: 1, status: 'COMPLETED', aggregationNum: 1, timeoutNum: 2 }, body: ['body'] };
+      const debugStub = sandbox.stub(getLogger(), 'debug');
       const store = { setStatus: sandbox.stub().returns(aggrEvent) };
       const aggregator = new Aggregator({ input: [{ store }] });
 
       const result = await aggregator.aggregate({ headers: { status: 'TIMEOUT' } }, 'COMPLETED');
-      result.should.eql({ headers: { id: 1, status: 'COMPLETED', previousStatus: 'TIMEOUT' }, body: ['body'] });
+      result.should.eql({
+        headers: {
+          id: 1,
+          status: 'COMPLETED',
+          previousStatus: 'TIMEOUT',
+          aggregationNum: 1,
+          timeoutNum: 2
+        }, body: ['body']
+      });
+      debugStub.args.should.eql([
+        ['[undefined] [1] [aggregation-1] [timeout-2] Aggregating event with status COMPLETED']
+      ]);
     });
   });
 });

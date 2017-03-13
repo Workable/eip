@@ -2,7 +2,7 @@ import * as log4js from 'log4js';
 
 let Logger;
 
-export function init(logger?, name = 'aggregator-eip') {
+export function init(logger?, name = 'eip') {
   if (logger) {
     Logger = logger;
   } else {
