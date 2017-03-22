@@ -55,6 +55,12 @@ export default class Aggregator extends Processor {
   async aggregate(event, status) {
     const store = await this.store.setStatus(this.getId(event), status);
     if (!store) {
+      if (status === Store.STATUS.TIMEOUT) {
+        getLogger().debug(`[${this.id}] [timeout] [${event.headers.id}] Already completed`);
+      } else {
+        getLogger().error(`[${this.id}] [${event.headers.id}] Could not set status to ${status}. \
+Probably already completed ${JSON.stringify(event)}`);
+      }
       return;
     }
     const { body, headers } = store;

@@ -178,10 +178,29 @@ describe('Aggregator', function () {
     it('should return undefined if set status returns undefined', async function () {
       const store = { setStatus: sandbox.stub().returns(undefined) };
       const aggregator = new Aggregator({ input: [{ store }] });
+      const errorStub = sandbox.stub(getLogger(), 'error');
+      const debugStub = sandbox.stub(getLogger(), 'debug');
 
-      const result = await aggregator.aggregate({ headers: { status: 'TIMEOUT' } }, 'COMPLETED');
+      const result = await aggregator.aggregate({ headers: { status: 'TIMEOUT' } }, 'TIMEOUT');
 
       should.equal(undefined, result);
+      errorStub.called.should.be.false();
+      debugStub.args.should.eql([
+        [`[undefined] [timeout] [undefined] Already completed`]
+      ]);
+    });
+
+    it('should return undefined and log error if set status returns undefined and new status is not timeout', async function () {
+      const store = { setStatus: sandbox.stub().returns(undefined) };
+      const aggregator = new Aggregator({ input: [{ store }] });
+      const errorStub = sandbox.stub(getLogger(), 'error');
+
+      const result = await aggregator.aggregate({ headers: { id: '1', status: 'TIMEOUT' } }, 'COMPLETED');
+
+      should.equal(undefined, result);
+      errorStub.args.should.eql([
+        [`[undefined] [1] Could not set status to COMPLETED. Probably already completed {"headers":{"id":"1","status":"TIMEOUT"}}`]
+      ]);
     });
   });
 });
