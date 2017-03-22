@@ -4,6 +4,7 @@ import * as MemoryTimer from '../../lib/processors/aggregator/memory-timer';
 import * as MaxNumStrategy from '../../lib/processors/aggregator/max-num-strategy';
 
 import * as sinon from 'sinon';
+import * as should from 'should';
 const sandbox = sinon.sandbox.create();
 
 describe('Aggregator', function () {
@@ -172,6 +173,15 @@ describe('Aggregator', function () {
       debugStub.args.should.eql([
         ['[undefined] [1] [aggregation-1] [timeout-2] Aggregating event with status COMPLETED']
       ]);
+    });
+
+    it('should return undefined if set status returns undefined', async function () {
+      const store = { setStatus: sandbox.stub().returns(undefined) };
+      const aggregator = new Aggregator({ input: [{ store }] });
+
+      const result = await aggregator.aggregate({ headers: { status: 'TIMEOUT' } }, 'COMPLETED');
+
+      should.equal(undefined, result);
     });
   });
 });

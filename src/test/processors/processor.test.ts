@@ -110,6 +110,16 @@ describe('Processor', function () {
       ]);
     });
 
+    it('should run cb with undefined result and return', async function () {
+      cbStub.returns(undefined);
+      await test.inject(cbStub);
+
+      cbStub.calledOnce.should.be.true();
+      cbStub.args.should.eql([[]]);
+
+      emitStub.called.should.be.false();
+    });
+
     it('should run cb and emit error', async function () {
       cbStub.throws(new Error('test'));
       try {

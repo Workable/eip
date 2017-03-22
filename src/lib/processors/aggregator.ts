@@ -53,7 +53,11 @@ export default class Aggregator extends Processor {
   }
 
   async aggregate(event, status) {
-    const { body, headers } = await this.store.setStatus(this.getId(event), status);
+    const store = await this.store.setStatus(this.getId(event), status);
+    if (!store) {
+      return;
+    }
+    const { body, headers } = store;
     getLogger().debug(`[${this.id}] [${headers.id}] [aggregation-${headers.aggregationNum}] \
 [timeout-${headers.timeoutNum}] Aggregating event with status ${status}`);
     return { body, headers: { ...headers, previousStatus: event.headers.status } };
