@@ -6,7 +6,7 @@ export default class MaxNumStrategy extends AggregationStrategy {
   }
 
   process(event) {
-    if (event.body && event.body.length >= this.times) {
+    if (event.body && event.body.length === this.times) {
       this.inject(event);
     }
   }

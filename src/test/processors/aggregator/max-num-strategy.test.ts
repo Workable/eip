@@ -25,4 +25,12 @@ describe('AggragationStrategy', function () {
       [{ body: [1, 2] }]
     ]);
   });
+
+  it('should not inject event', function () {
+    const strategy = new MaxNumStrategy(2);
+    const injectStub = sandbox.stub(strategy, 'inject');
+    strategy.process({ body: [1, 2, 3] });
+
+    injectStub.called.should.be.false();
+  });
 });
