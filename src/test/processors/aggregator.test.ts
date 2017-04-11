@@ -99,6 +99,35 @@ describe('Aggregator', function () {
       ]);
     });
 
+     it('should call inject and aggregate on timer event with status COMPLETED', async function () {
+      const timer = { on: sandbox.stub() };
+      const event = { headers: { id: 1 }, body: 'body' };
+      const debugStub = sandbox.stub(getLogger(), 'debug');
+
+      const store = { getById: sandbox.stub().returns(event) };
+
+      const aggregator = new Aggregator({ input: [{ timer, store, completeOnTimeout: true }] });
+      const injectStub = sandbox.stub(aggregator, 'inject');
+      const aggregateStub = sandbox.stub(aggregator, 'aggregate');
+
+      await timer.on.args[0][1](1, 2, 10);
+
+      store.getById.args.should.eql([
+        [1]
+      ]);
+
+      injectStub.calledOnce.should.be.true();
+      injectStub.args[0][0]();
+      aggregateStub.calledOnce.should.be.true();
+      event.headers.id = 3; // test cloneHeaders
+      aggregateStub.args.should.eql([
+        [{ headers: { id: 1 }, body: 'body' }, 'COMPLETED']
+      ]);
+      debugStub.args.should.eql([
+        ['[undefined] [timeout-2] [1] after 10 ms']
+      ]);
+    });
+
     context('when timeouts but is already completed', function () {
       it('should call inject and aggregate on timer event and log error', async function () {
         const timer = { on: sandbox.stub() };

@@ -11,15 +11,23 @@ export default class Aggregator extends Processor {
   private strategy: AggregationStrategy;
   private store: Store;
   private timer: Timer;
+  private completeOnTimeout: boolean;
 
   constructor(options) {
     super(options);
     const { timeout = [1000] } = this.input[0] || {};
     const { maxTimes = 3 } = this.input[0] || {};
-    const { strategy = new MaxNumStrategy(maxTimes), store = new MemoryStore(), timer = new MemoryTimer(timeout) } = this.input[0] || {};
+    const {
+      strategy = new MaxNumStrategy(maxTimes),
+      store = new MemoryStore(),
+      timer = new MemoryTimer(timeout),
+      completeOnTimeout = false
+    } = this.input[0] || {};
+
     this.strategy = strategy;
     this.store = store;
     this.timer = <any>timer;
+    this.completeOnTimeout = completeOnTimeout;
 
     this.strategy.on('event', (event, status) =>
       this.inject(() => this.aggregate(this.cloneHeaders(event), status))
@@ -32,7 +40,8 @@ export default class Aggregator extends Processor {
         return;
       }
       getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] after ${delay} ms`);
-      this.inject(() => this.aggregate(this.cloneHeaders(storedEvent), Store.STATUS.TIMEOUT));
+      const status = this.completeOnTimeout ? Store.STATUS.COMPLETED : Store.STATUS.TIMEOUT;
+      this.inject(() => this.aggregate(this.cloneHeaders(storedEvent), status));
     });
   }
 
