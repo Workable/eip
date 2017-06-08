@@ -3,67 +3,64 @@ import Mapper from '../lib/processors/mapper';
 import * as sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
-describe('Route', function () {
+const asyncError = (name, timeout) => {
+  return new Promise((_, r) => setTimeout(() => r(new Error(name)), timeout));
+};
 
-  describe('inject', function () {
+describe('Route', function() {
+  describe('inject', function() {
     let route;
     let mapperStub;
 
-    beforeEach(function () {
+    beforeEach(function() {
       mapperStub = sandbox.stub();
       const mapper = new Mapper({ name: 'testMapper', input: [mapperStub], id: '1' });
       route = new Route(undefined, undefined, [mapper]);
     });
 
-    it('should call 1st processors', function () {
+    it('should call 1st processors', function() {
       route.inject('test input');
 
       mapperStub.calledOnce.should.be.true();
-      mapperStub.args.should.eql([
-        ['test input']
-      ]);
+      mapperStub.args.should.eql([['test input']]);
     });
 
-    it('should fail if no processor is added', async function () {
+    it('should fail if no processor is added', async function() {
       route = new Route('test-route');
       try {
         await route.inject('test input');
       } catch (e) {
         e.should.eql(new Error('[test-route] No processor is given'));
       }
-    })
+    });
   });
 
-  describe('register', function () {
+  describe('register', function() {
     let route;
     let config = { route: { retryLimit: 3, retryDelay: 0 } };
 
-    before(function () {
+    before(function() {
       Route.register('test', Mapper);
     });
 
-    it('should call processors added', async function () {
+    it('should call processors added', async function() {
       const stub = sandbox.stub().returns('input transformed');
       const stub2 = sandbox.stub();
       route = (<any>new Route('test', config)).test(stub).test(stub2);
 
       await route.inject('test input');
       stub.calledOnce.should.be.true();
-      stub.args.should.eql([
-        ['test input']
-      ]);
+      stub.args.should.eql([['test input']]);
 
       stub2.calledOnce.should.be.true();
-      stub2.args.should.eql([
-        ['input transformed']
-      ]);
+      stub2.args.should.eql([['input transformed']]);
     });
 
-    it('should retry failing processor', async function () {
+    it('should retry failing processor', async function() {
       const stub = sandbox.stub();
       const stub2 = sandbox.stub();
-      stub.onCall(0).returns(Promise.reject(new Error('test error')));
-      stub.onCall(1).returns(Promise.reject(new Error('test error 2')));
+      stub.onCall(0).returns(asyncError('test error', 5));
+      stub.onCall(1).returns(asyncError('test error 2', 10));
       stub.onCall(2).returns(Promise.resolve('input transformed'));
       route = (<any>new Route('test', config)).test(stub).test(stub2);
       try {
@@ -75,25 +72,19 @@ describe('Route', function () {
       await new Promise(resolve => setTimeout(resolve, 30));
 
       stub.calledThrice.should.be.true();
-      stub.args.should.eql([
-        ['test input'],
-        ['test input'],
-        ['test input']
-      ]);
+      stub.args.should.eql([['test input'], ['test input'], ['test input']]);
 
       stub2.calledOnce.should.be.true();
-      stub2.args.should.eql([
-        ['input transformed']
-      ]);
+      stub2.args.should.eql([['input transformed']]);
     });
 
-    it('should retry failing processor and fail', async function () {
+    it('should retry failing processor and fail', async function() {
       const stub = sandbox.stub();
       const stub2 = sandbox.stub();
-      stub.onCall(0).returns(Promise.reject(new Error('test error')));
-      stub.onCall(1).returns(Promise.reject(new Error('test error 2')));
-      stub.onCall(2).returns(Promise.reject(new Error('test error 3')));
-      stub.onCall(3).returns(Promise.reject(new Error('test error 4')));
+      stub.onCall(0).returns(asyncError('test error', 5));
+      stub.onCall(1).returns(asyncError('test error 2', 10));
+      stub.onCall(2).returns(asyncError('test error 3', 15));
+      stub.onCall(3).returns(asyncError('test error 4', 20));
       route = (<any>new Route('test', config)).test(stub).test(stub2);
       try {
         await route.inject('test input');
@@ -104,12 +95,7 @@ describe('Route', function () {
       await new Promise(resolve => setTimeout(resolve, 50));
 
       stub.callCount.should.equal(4);
-      stub.args.should.eql([
-        ['test input'],
-        ['test input'],
-        ['test input'],
-        ['test input']
-      ]);
+      stub.args.should.eql([['test input'], ['test input'], ['test input'], ['test input']]);
 
       stub2.called.should.be.false();
     });
