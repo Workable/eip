@@ -4,14 +4,14 @@ import * as sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
 describe('Throttler', function () {
-  let dispatcher;
+  let throttler;
   let injectStub: sinon.SinonStub;
   let timers: sinon.SinonFakeTimers;
 
   beforeEach(function () {
-    dispatcher = new Throttler({ id: 'id', input: [2, 2000], name: 'name', previous: null });
+    throttler = new Throttler({ id: 'id', input: [2, 2000], name: 'name', previous: null });
     timers = sinon.useFakeTimers();
-    injectStub = sandbox.stub(dispatcher, 'inject');
+    injectStub = sandbox.stub(throttler, 'inject');
   });
 
   afterEach(function () {
@@ -21,7 +21,7 @@ describe('Throttler', function () {
 
   describe('process', function () {
     it('should throttle events', async function () {
-      const result = await Promise.all([...Array(5).keys()].map(i => dispatcher.process(i)));
+      const result = await Promise.all([...Array(5).keys()].map(i => throttler.process(i)));
       result.should.containDeepOrdered([0, 1, undefined, undefined, undefined]);
       timers.tick(1999);
       await new Promise(r => r());
