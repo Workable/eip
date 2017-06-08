@@ -15,7 +15,7 @@ export default class Throttler extends Processor {
 
   processQueue() {
     if (this.queue.length > 0) {
-      var event = this.queue.shift();
+      const event = this.queue.shift();
       this.addEvent();
       this.inject(() => event);
     }
