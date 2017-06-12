@@ -26,7 +26,7 @@ export default class Aggregator extends Processor {
 
     this.strategy = strategy;
     this.store = store;
-    this.timer = <any>timer;
+    this.timer = timer;
     this.completeOnTimeout = completeOnTimeout;
 
     this.strategy.on('event', (event, status) =>

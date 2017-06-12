@@ -16,6 +16,7 @@ describe('ResourceThrottler', function() {
   let timers: sinon.SinonFakeTimers;
   let resource: sinon.SinonStub;
   let infoStub;
+  let debugStub;
 
   before(function() {
     init();
@@ -23,10 +24,16 @@ describe('ResourceThrottler', function() {
 
   beforeEach(function() {
     resource = sandbox.stub().returns({});
-    throttler = new Throttler({ id: 'id', input: [2, 2000, resource], name: 'name', previous: null });
+    throttler = new Throttler({
+      id: 'id',
+      input: [{ eventsPerPeriod: 2, periodInMS: 2000, resource }],
+      name: 'name',
+      previous: null
+    });
     timers = sinon.useFakeTimers();
     injectStub = sandbox.stub(throttler, 'inject');
     infoStub = sandbox.stub(getLogger(), 'info');
+    debugStub = sandbox.stub(getLogger(), 'debug');
   });
 
   afterEach(function() {
@@ -34,7 +41,16 @@ describe('ResourceThrottler', function() {
     timers.restore();
   });
 
-  describe.only('process', function() {
+  describe('constructor', function() {
+    it('should use defaults', function() {
+      const t = new Throttler({ input: [] });
+      t.timer.delays.should.eql([1000]);
+      t.pubSub.eventsPerPeriod.should.eql(1);
+      t.resource(5).should.eql(5);
+    });
+  });
+
+  describe('process', function() {
     it('should throttle events', async function() {
       const result = Promise.all([...Array(5).keys()].map(i => throttler.process({ headers: { id: i } })));
       result.should.containDeepOrdered([undefined, undefined, undefined, undefined, undefined]);
@@ -65,17 +81,17 @@ describe('ResourceThrottler', function() {
     });
 
     it('should throttle events using different id', async function() {
-      const result = Promise.all([...Array(5).keys()].map(i => throttler.process({ headers: { id: i % 3 } })));
-      result.should.containDeepOrdered([undefined, undefined, undefined, undefined, undefined]);
+      const result = Promise.all([...Array(7).keys()].map(i => throttler.process({ headers: { id: i % 3 } })));
+      result.should.containDeepOrdered([undefined, undefined, undefined, undefined, undefined, undefined, undefined]);
       await wait();
       timers.tick(1999);
       await wait();
       resource.args.should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }]]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}]]);
+      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}]]);
       timers.tick(1);
       await wait();
       resource.args.should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }], [{ headers: { id: 2 } }]]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}]]);
+      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}], [{}], [{}]]);
     });
   });
 });

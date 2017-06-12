@@ -1,24 +1,36 @@
 import Processor from './processor';
-import * as EventEmmiter from 'events';
 import { getLogger } from '../logger';
+import PubSub from './throttler/pub-sub';
 import MemoryPubSub from './throttler/memory-pub-sub';
+import Timer from './aggregator/timer';
+import MemoryTimer from './aggregator/memory-timer';
 
-let pubSub: MemoryPubSub;
 export default class ResourceThrottler extends Processor {
-  private eventsPerPeriod: number;
-  private periodInMS: number;
-  private resource: Function;
+  public resource: Function;
+  public timer: Timer;
+  public pubSub: PubSub;
 
   constructor(options) {
     super(options);
-    this.eventsPerPeriod = this.input[0];
-    this.periodInMS = this.input[1] || 1000;
-    this.resource = this.input[2] || (x => x);
-    pubSub = new MemoryPubSub(this.eventsPerPeriod, this.periodInMS);
+    const { eventsPerPeriod = 1, periodInMS = 1000 } = this.input[0] || {};
+    const {
+      timer = new MemoryTimer([periodInMS]),
+      resource = x => x,
+      pubSub = new MemoryPubSub(eventsPerPeriod, periodInMS)
+    } =
+      this.input[0] || {};
+    this.timer = timer;
+    this.pubSub = pubSub;
+    this.resource = resource;
+
+    this.timer.on('event', async (id, attempt, delay) => {
+      getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] after ${delay} ms`);
+      this.processQueue();
+    });
   }
 
   async processQueue() {
-    const events = await pubSub.getQueue();
+    const events = await this.pubSub.getQueue();
     if (events && events.length > 0) {
       events.forEach(e => this.addEvent(e));
     }
@@ -32,23 +44,20 @@ export default class ResourceThrottler extends Processor {
     return event.headers.priority;
   }
 
-  async wait(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   async run(event) {
     const result = await this.resource(event);
     const id = this.getId(event);
-    await pubSub.unsubscribe(id, result);
+    await this.pubSub.unsubscribe(id, result);
     this.inject(() => result);
   }
 
   async addEvent(event) {
     const id = this.getId(event);
-    if (await pubSub.subscribe(id, event, processed => this.inject(() => processed), () => this.processQueue())) {
+    if (await this.pubSub.subscribe(id, this.getPriority(event), event, processed => this.inject(() => processed))) {
       getLogger().info(`${id} Waiting for same resource to return`);
       return;
     }
+    this.timer.start(id);
     getLogger().info(`${id} running`);
     this.run(event);
   }
