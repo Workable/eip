@@ -19,6 +19,13 @@ describe('Throttler', function () {
     timers.restore();
   });
 
+  describe('constructor', function() {
+    it('should use defaults', function() {
+      const t = new Throttler({ input: [1] });
+      t.periodInMS.should.eql(1000);
+    });
+  });
+
   describe('process', function () {
     it('should throttle events', async function () {
       const result = await Promise.all([...Array(5).keys()].map(i => throttler.process(i)));

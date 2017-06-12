@@ -3,7 +3,7 @@ import Processor from './processor';
 export default class Throttler extends Processor {
   private eventsPerPeriod: number;
   private eventsInProgress: number = 0;
-  private periodInMS: number;
+  public periodInMS: number;
   private queue: any[] = [];
 
   constructor(options) {
