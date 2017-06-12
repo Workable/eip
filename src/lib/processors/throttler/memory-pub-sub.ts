@@ -3,11 +3,10 @@ import PubSub from './pub-sub';
 
 export default class MemoryPubSub extends PubSub {
   private events: Map<String, any> = new Map();
-  private queue: any[] = [];
 
-  async subscribe(id: string, priority: number, event, cb): Promise<boolean> {
+  async subscribe(id: string, priority: number, event): Promise<boolean> {
     if (this.events.has(id)) {
-      this.events.get(id).on(PubSub.PROCESSED, cb);
+      this.events.get(id).on(PubSub.PROCESSED, result => this.inject(id, result));
       return true;
     }
 
@@ -15,7 +14,7 @@ export default class MemoryPubSub extends PubSub {
       this.events.set(id, new EventEmmiter.EventEmitter());
       return false;
     } else {
-      this.queue.push({ id, priority, event });
+      this.reject(id, event);
       return true;
     }
   }
@@ -23,14 +22,5 @@ export default class MemoryPubSub extends PubSub {
   async unsubscribe(id: string, result) {
     this.events.get(id).emit(PubSub.PROCESSED, result);
     this.events.delete(id);
-  }
-
-  async getQueue() {
-    if (this.queue.length > 0) {
-      const { id, event } = this.queue.sort((a, b) => a.priority - b.priority).shift();
-      const similarEvents = this.queue.filter(e => id === e.id).map(({ event }) => event);
-      this.queue = this.queue.filter(e => id !== e.id);
-      return [event, ...similarEvents];
-    }
   }
 }
