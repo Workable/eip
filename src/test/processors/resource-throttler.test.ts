@@ -52,46 +52,93 @@ describe('ResourceThrottler', function() {
 
   describe('process', function() {
     it('should throttle events', async function() {
-      const result = Promise.all([...Array(5).keys()].map(i => throttler.process({ headers: { id: i } })));
+      const result = Promise.all(
+        [...Array(5).keys()].map(i => throttler.process({ headers: { correlationId: i, id: i } }))
+      );
       result.should.containDeepOrdered([undefined, undefined, undefined, undefined, undefined]);
       await wait();
       timers.tick(1999);
       await wait();
-      resource.args.should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }]]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}]]);
+      resource.args.should.eql([
+        [{ headers: { correlationId: 0, id: 0 } }],
+        [{ headers: { correlationId: 1, id: 1 } }]
+      ]);
+      injectStub.args.map(x => x.map(y => y())).should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }]]);
       timers.tick(1);
       await wait();
       resource.args.should.eql([
-        [{ headers: { id: 0 } }],
-        [{ headers: { id: 1 } }],
-        [{ headers: { id: 2 } }],
-        [{ headers: { id: 3 } }]
+        [{ headers: { correlationId: 0, id: 0 } }],
+        [{ headers: { correlationId: 1, id: 1 } }],
+        [{ headers: { correlationId: 2, id: 2 } }],
+        [{ headers: { correlationId: 3, id: 3 } }]
       ]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}]]);
+      injectStub.args
+        .map(x => x.map(y => y()))
+        .should.eql([
+          [{ headers: { id: 0 } }],
+          [{ headers: { id: 1 } }],
+          [{ headers: { id: 2 } }],
+          [{ headers: { id: 3 } }]
+        ]);
       timers.tick(2000);
       await wait();
       resource.args.should.eql([
-        [{ headers: { id: 0 } }],
-        [{ headers: { id: 1 } }],
-        [{ headers: { id: 2 } }],
-        [{ headers: { id: 3 } }],
-        [{ headers: { id: 4 } }]
+        [{ headers: { correlationId: 0, id: 0 } }],
+        [{ headers: { correlationId: 1, id: 1 } }],
+        [{ headers: { correlationId: 2, id: 2 } }],
+        [{ headers: { correlationId: 3, id: 3 } }],
+        [{ headers: { correlationId: 4, id: 4 } }]
       ]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}]]);
+      injectStub.args
+        .map(x => x.map(y => y()))
+        .should.eql([
+          [{ headers: { id: 0 } }],
+          [{ headers: { id: 1 } }],
+          [{ headers: { id: 2 } }],
+          [{ headers: { id: 3 } }],
+          [{ headers: { id: 4 } }]
+        ]);
     });
 
     it('should throttle events using different id', async function() {
-      const result = Promise.all([...Array(7).keys()].map(i => throttler.process({ headers: { id: i % 3 } })));
+      const result = Promise.all(
+        [...Array(7).keys()].map(i => throttler.process({ headers: { id: i, correlationId: i % 3 } }))
+      );
       result.should.containDeepOrdered([undefined, undefined, undefined, undefined, undefined, undefined, undefined]);
       await wait();
       timers.tick(1999);
       await wait();
-      resource.args.should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }]]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}]]);
+      resource.args.should.eql([
+        [{ headers: { correlationId: 0, id: 0 } }],
+        [{ headers: { correlationId: 1, id: 1 } }]
+      ]);
+      injectStub.args
+        .map(x => x.map(y => y()))
+        .should.eql([
+          [{ headers: { id: 3 } }],
+          [{ headers: { id: 6 } }],
+          [{ headers: { id: 4 } }],
+          [{ headers: { id: 0 } }],
+          [{ headers: { id: 1 } }]
+        ]);
       timers.tick(1);
       await wait();
-      resource.args.should.eql([[{ headers: { id: 0 } }], [{ headers: { id: 1 } }], [{ headers: { id: 2 } }]]);
-      injectStub.args.map(x => x.map(y => y())).should.eql([[{}], [{}], [{}], [{}], [{}], [{}], [{}]]);
+      resource.args.should.eql([
+        [{ headers: { correlationId: 0, id: 0 } }],
+        [{ headers: { correlationId: 1, id: 1 } }],
+        [{ headers: { correlationId: 2, id: 2 } }]
+      ]);
+      injectStub.args
+        .map(x => x.map(y => y()))
+        .should.eql([
+          [{ headers: { id: 3 } }],
+          [{ headers: { id: 6 } }],
+          [{ headers: { id: 4 } }],
+          [{ headers: { id: 0 } }],
+          [{ headers: { id: 1 } }],
+          [{ headers: { id: 5 } }],
+          [{ headers: { id: 2 } }]
+        ]);
     });
   });
 });

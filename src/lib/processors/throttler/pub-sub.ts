@@ -7,12 +7,12 @@ abstract class PubSub extends EventEmmiter.EventEmitter {
     super();
   }
 
-  abstract async subscribe(id: string, priority: number, event: any): Promise<boolean>;
+  abstract async subscribe(id: string, event: any): Promise<boolean>;
 
   abstract async unsubscribe(id: string, result: any);
 
-  inject(id, result) {
-    this.emit(PubSub.PROCESSED, id, result);
+  inject(id, event, result) {
+    this.emit(PubSub.PROCESSED, id, event, result);
   }
 
   reject(id, event) {

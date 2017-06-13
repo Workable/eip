@@ -20,17 +20,17 @@ describe('MemoryStore', function() {
     it('should mark first event and subscribe to event already in progress', async function() {
       const event = {};
       const event2 = {};
-      (await pubSub.subscribe('id', 0, event)).should.equal(false);
-      (await pubSub.subscribe('id', 0, event2)).should.equal(true);
+      (await pubSub.subscribe('id', event)).should.equal(false);
+      (await pubSub.subscribe('id', event2)).should.equal(true);
     });
 
     it('should add event to queue', async function() {
       const event = {};
       const event2 = {};
       const event3 = {};
-      (await pubSub.subscribe('id', 0, event)).should.equal(false);
-      (await pubSub.subscribe('id2', 0, event2)).should.equal(false);
-      (await pubSub.subscribe('id3', 0, event3)).should.equal(true);
+      (await pubSub.subscribe('id', event)).should.equal(false);
+      (await pubSub.subscribe('id2', event2)).should.equal(false);
+      (await pubSub.subscribe('id3', event3)).should.equal(true);
     });
   });
 
@@ -38,12 +38,13 @@ describe('MemoryStore', function() {
     it('should broadcast that event has been processed', async function() {
       const event = {};
       const event2 = {};
-      (await pubSub.subscribe('id', 0, event)).should.equal(false);
-      pubSub.on(PubSub.PROCESSED, (id, result) => {
+      (await pubSub.subscribe('id', event)).should.equal(false);
+      pubSub.on(PubSub.PROCESSED, (id, event, result) => {
+        event.should.equal(event2);
         result.should.eql('result');
         id.should.eql('id');
       });
-      (await pubSub.subscribe('id', 0, event2)).should.equal(true);
+      (await pubSub.subscribe('id', event2)).should.equal(true);
       await pubSub.unsubscribe('id', 'result');
     });
   });

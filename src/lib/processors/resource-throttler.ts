@@ -33,7 +33,9 @@ export default class ResourceThrottler extends Processor {
       this.processQueue();
     });
 
-    this.pubSub.on(PubSub.PROCESSED, (id, result) => this.inject(() => result));
+    this.pubSub.on(PubSub.PROCESSED, (id, event, result) =>
+      this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }))
+    );
     this.pubSub.on(PubSub.OVERFLOW, (id, event) => this.queue.enqueue(id, this.getPriority(event), event));
   }
 
@@ -45,7 +47,11 @@ export default class ResourceThrottler extends Processor {
   }
 
   getId(event) {
-    return event.headers.id;
+    return event && event.headers && event.headers.correlationId;
+  }
+
+  getRunId(event) {
+    return event && event.headers && event.headers.id;
   }
 
   getPriority(event) {
@@ -56,12 +62,12 @@ export default class ResourceThrottler extends Processor {
     const result = await this.resource(event);
     const id = this.getId(event);
     await this.pubSub.unsubscribe(id, result);
-    this.inject(() => result);
+    this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
   }
 
   async addEvent(event) {
     const id = this.getId(event);
-    if (await this.pubSub.subscribe(id, this.getPriority(event), event)) {
+    if (await this.pubSub.subscribe(id, event)) {
       getLogger().info(`${id} Waiting for same resource to return`);
       return;
     }

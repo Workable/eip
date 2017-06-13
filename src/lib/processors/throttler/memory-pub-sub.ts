@@ -4,9 +4,9 @@ import PubSub from './pub-sub';
 export default class MemoryPubSub extends PubSub {
   private events: Map<String, any> = new Map();
 
-  async subscribe(id: string, priority: number, event): Promise<boolean> {
+  async subscribe(id: string, event): Promise<boolean> {
     if (this.events.has(id)) {
-      this.events.get(id).on(PubSub.PROCESSED, result => this.inject(id, result));
+      this.events.get(id).on(PubSub.PROCESSED, result => this.inject(id, event, result));
       return true;
     }
 
