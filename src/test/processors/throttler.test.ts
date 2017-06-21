@@ -3,18 +3,24 @@ import * as sinon from 'sinon';
 
 const sandbox = sinon.sandbox.create();
 
-describe('Throttler', function () {
+const wait = async () => {
+  for (let _ of [...Array(10).keys()]) {
+    await new Promise(r => r());
+  }
+};
+
+describe('Throttler', function() {
   let throttler;
   let injectStub: sinon.SinonStub;
   let timers: sinon.SinonFakeTimers;
 
-  beforeEach(function () {
+  beforeEach(function() {
     throttler = new Throttler({ id: 'id', input: [2, 2000], name: 'name', previous: null });
     timers = sinon.useFakeTimers();
     injectStub = sandbox.stub(throttler, 'inject');
   });
 
-  afterEach(function () {
+  afterEach(function() {
     sandbox.restore();
     timers.restore();
   });
@@ -26,25 +32,23 @@ describe('Throttler', function () {
     });
   });
 
-  describe('process', function () {
-    it('should throttle events', async function () {
+  describe('process', function() {
+    it('should throttle events', async function() {
       const result = await Promise.all([...Array(5).keys()].map(i => throttler.process(i)));
       result.should.containDeepOrdered([0, 1, undefined, undefined, undefined]);
       timers.tick(1999);
-      await new Promise(r => r());
+      await wait();
       injectStub.called.should.be.false();
       timers.tick(1);
-      await new Promise(r => r());
+      await wait();
       injectStub.calledTwice.should.be.true();
       injectStub.args[0][0]().should.eql(2);
       injectStub.args[1][0]().should.eql(3);
 
       timers.tick(2000);
-      await Promise.resolve();
-      await Promise.resolve();
+      await wait();
       injectStub.calledThrice.should.be.true();
       injectStub.args[2][0]().should.eql(4);
     });
-
   });
 });
