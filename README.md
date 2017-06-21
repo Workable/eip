@@ -50,6 +50,20 @@ filter(event => doAsyncStuff(event).then(result => result > 5)) // filter can ac
 process(event => [event, event]) // custom processor that transforms the event
 process(event => doAsyncStuff(event)) // transform event returning a promise
 throttle(10, 1000) // 10 events per second (1000 ms)
+throttleResource({
+  eventsPerPeriod:1,
+  periodInMs:1000
+})
+
+  //or
+throttleResource({
+  timer: new Timer(),
+  resource: x => x,
+  pubSub: new PubSub(),
+  queue: new Queue()
+})
+// Timer, PubSub and Queue are abstract classes exported by eip that can be extended.
+// see eip-redis and eip-rabbit for implementations of Timer on top of rabbitmq and pubSub and queue on top of redis
 
 //logging
 trace()
