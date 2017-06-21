@@ -30,6 +30,7 @@ export default class ResourceThrottler extends Processor {
 
     this.timer.on('event', async (id, attempt, delay) => {
       getLogger().debug(`[${this.id}] [timeout-${attempt}] [${id}] after ${delay} ms`);
+      await this.pubSub.timeout();
       this.processQueue();
     });
 

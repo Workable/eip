@@ -11,6 +11,8 @@ abstract class PubSub extends EventEmmiter.EventEmitter {
 
   abstract async unsubscribe(id: string, result: any);
 
+  abstract async timeout();
+
   inject(id, event, result) {
     this.emit(PubSub.PROCESSED, id, event, result);
   }

@@ -3,6 +3,7 @@ import PubSub from './pub-sub';
 
 export default class MemoryPubSub extends PubSub {
   private events: Map<String, any> = new Map();
+  private counter = 0;
 
   async subscribe(id: string, event): Promise<boolean> {
     if (this.events.has(id)) {
@@ -10,13 +11,18 @@ export default class MemoryPubSub extends PubSub {
       return true;
     }
 
-    if (this.events.size < this.eventsPerPeriod) {
+    if (this.counter < this.eventsPerPeriod) {
+      this.counter++;
       this.events.set(id, new EventEmmiter.EventEmitter());
       return false;
     } else {
       this.reject(id, event);
       return true;
     }
+  }
+
+  async timeout() {
+    this.counter--;
   }
 
   async unsubscribe(id: string, result) {
