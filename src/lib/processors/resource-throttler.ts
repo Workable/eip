@@ -41,7 +41,7 @@ export default class ResourceThrottler extends Processor {
 
     this.pubSub.on(PubSub.OVERFLOW, (id, event) => {
       const priority = this.getPriority(event);
-      getLogger().debug(`[${this.id}] [${this.getRunId(id)}] - [${id}] Adding to queue with priority ${priority}`);
+      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Adding to queue with priority ${priority}`);
       this.queue.enqueue(id, priority, event);
     });
   }
