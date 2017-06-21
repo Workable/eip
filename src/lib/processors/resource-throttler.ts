@@ -19,7 +19,7 @@ export default class ResourceThrottler extends Processor {
     const {
       timer = new MemoryTimer([periodInMS]),
       resource = x => x,
-      pubSub = new MemoryPubSub(eventsPerPeriod, periodInMS),
+      pubSub = new MemoryPubSub(eventsPerPeriod),
       queue = new MemoryQueue()
     } =
       this.input[0] || {};
@@ -35,13 +35,13 @@ export default class ResourceThrottler extends Processor {
     });
 
     this.pubSub.on(PubSub.PROCESSED, (id, event, result) => {
-      getLogger().debug(`[${this.id}] [${id}] Processed by another request `);
+      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Processed by another request `);
       this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
     });
 
     this.pubSub.on(PubSub.OVERFLOW, (id, event) => {
       const priority = this.getPriority(event);
-      getLogger().debug(`[${this.id}] [${id}] Adding to queue with priority ${priority}`);
+      getLogger().debug(`[${this.id}] [${this.getRunId(id)}] - [${id}] Adding to queue with priority ${priority}`);
       this.queue.enqueue(id, priority, event);
     });
   }
@@ -49,10 +49,9 @@ export default class ResourceThrottler extends Processor {
   async processQueue() {
     const events = await this.queue.dequeue();
     if (events && events.length > 0) {
-
       events.forEach(e => {
         getLogger().debug(`[${this.id}] [${this.getId(e)}] Dequeuing...`);
-        this.addEvent(e)
+        this.addEvent(e);
       });
     }
   }

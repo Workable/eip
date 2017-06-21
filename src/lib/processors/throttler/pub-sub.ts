@@ -3,7 +3,7 @@ import * as EventEmmiter from 'events';
 abstract class PubSub extends EventEmmiter.EventEmitter {
   static PROCESSED = 'processed';
   static OVERFLOW = 'overflow';
-  constructor(public eventsPerPeriod: number, public periodInMS: number) {
+  constructor(public eventsPerPeriod: number) {
     super();
   }
 

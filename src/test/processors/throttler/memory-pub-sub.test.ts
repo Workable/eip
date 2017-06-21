@@ -9,7 +9,7 @@ describe('MemoryStore', function() {
   let pubSub: MemoryPubSub;
 
   beforeEach(function() {
-    pubSub = new MemoryPubSub(2, 2000);
+    pubSub = new MemoryPubSub(2);
   });
 
   afterEach(function() {
