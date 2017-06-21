@@ -34,16 +34,26 @@ export default class ResourceThrottler extends Processor {
       this.processQueue();
     });
 
-    this.pubSub.on(PubSub.PROCESSED, (id, event, result) =>
-      this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }))
-    );
-    this.pubSub.on(PubSub.OVERFLOW, (id, event) => this.queue.enqueue(id, this.getPriority(event), event));
+    this.pubSub.on(PubSub.PROCESSED, (id, event, result) => {
+      getLogger().debug(`[${this.id}] [${id}] Processed by another request `);
+      this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
+    });
+
+    this.pubSub.on(PubSub.OVERFLOW, (id, event) => {
+      const priority = this.getPriority(event);
+      getLogger().debug(`[${this.id}] [${id}] Adding to queue with priority ${priority}`);
+      this.queue.enqueue(id, priority, event);
+    });
   }
 
   async processQueue() {
     const events = await this.queue.dequeue();
     if (events && events.length > 0) {
-      events.forEach(e => this.addEvent(e));
+
+      events.forEach(e => {
+        getLogger().debug(`[${this.id}] [${this.getId(e)}] Dequeuing...`);
+        this.addEvent(e)
+      });
     }
   }
 
@@ -56,7 +66,7 @@ export default class ResourceThrottler extends Processor {
   }
 
   getPriority(event) {
-    return event.headers.priority;
+    return event.headers.priority || 0;
   }
 
   async run(event) {
@@ -69,11 +79,11 @@ export default class ResourceThrottler extends Processor {
   async addEvent(event) {
     const id = this.getId(event);
     if (await this.pubSub.subscribe(id, event)) {
-      getLogger().info(`${id} Waiting for same resource to return`);
+      getLogger().info(`[${this.id}] ${id} Will not run now`);
       return;
     }
     this.timer.start(id);
-    getLogger().info(`${id} running`);
+    getLogger().info(`[${this.id}] ${id} Running`);
     this.run(event);
   }
 
