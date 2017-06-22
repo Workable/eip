@@ -25,7 +25,7 @@ export default class MemoryPubSub extends PubSub {
     this.counter--;
   }
 
-  async unsubscribe(id: string, result) {
+  async publish(id: string, result) {
     this.events.get(id).emit(PubSub.PROCESSED, result);
     this.events.delete(id);
   }

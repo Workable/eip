@@ -60,7 +60,7 @@ describe('MemoryStore', function() {
         });
       });
       (await pubSub.subscribe('id', event2)).should.equal(true);
-      await pubSub.unsubscribe('id', 'result');
+      await pubSub.publish('id', 'result');
       await promise;
     });
   });
