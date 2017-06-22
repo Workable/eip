@@ -76,7 +76,7 @@ export default class ResourceThrottler extends Processor {
 
   async addEvent(event, fromQueue = false) {
     const id = this.getId(event);
-    if (await this.pubSub.subscribe(id, event, fromQueue)) {
+    if (await this.pubSub.subscribe(id, event, !fromQueue)) {
       getLogger().info(`[${this.id}] ${id} Will not run now`);
       return;
     }
