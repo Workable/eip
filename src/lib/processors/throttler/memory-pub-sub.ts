@@ -5,7 +5,7 @@ export default class MemoryPubSub extends PubSub {
   private events: Map<String, any> = new Map();
   private counter = 0;
 
-  async subscribe(id: string, event): Promise<boolean> {
+  async subscribe(id: string, event, subscribe = true): Promise<boolean> {
     if (this.events.has(id)) {
       this.events.get(id).on(PubSub.PROCESSED, result => this.inject(id, event, result));
       return true;

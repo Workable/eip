@@ -7,7 +7,7 @@ abstract class PubSub extends EventEmmiter.EventEmitter {
     super();
   }
 
-  abstract async subscribe(id: string, event: any): Promise<boolean>;
+  abstract async subscribe(id: string, event: any, subscribe: boolean): Promise<boolean>;
 
   abstract async publish(id: string, result: any);
 

@@ -51,7 +51,7 @@ export default class ResourceThrottler extends Processor {
     if (events && events.length > 0) {
       events.forEach(e => {
         getLogger().debug(`[${this.id}] [${this.getId(e)}] Dequeuing...`);
-        this.addEvent(e);
+        this.addEvent(e, true);
       });
     }
   }
@@ -74,9 +74,9 @@ export default class ResourceThrottler extends Processor {
     await this.pubSub.publish(id, result);
   }
 
-  async addEvent(event) {
+  async addEvent(event, fromQueue = false) {
     const id = this.getId(event);
-    if (await this.pubSub.subscribe(id, event)) {
+    if (await this.pubSub.subscribe(id, event, fromQueue)) {
       getLogger().info(`[${this.id}] ${id} Will not run now`);
       return;
     }
