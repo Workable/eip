@@ -130,13 +130,13 @@ describe('ResourceThrottler', function() {
       injectStub.args
         .map(x => x.map(y => y()))
         .should.eql([
+          [{ headers: { id: 0 } }],
           [{ headers: { id: 3 } }],
           [{ headers: { id: 6 } }],
-          [{ headers: { id: 4 } }],
-          [{ headers: { id: 0 } }],
           [{ headers: { id: 1 } }],
-          [{ headers: { id: 5 } }],
-          [{ headers: { id: 2 } }]
+          [{ headers: { id: 4 } }],
+          [{ headers: { id: 2 } }],
+          [{ headers: { id: 5 } }]
         ]);
     });
   });

@@ -14,6 +14,7 @@ export default class MemoryPubSub extends PubSub {
     if (this.counter < this.eventsPerPeriod) {
       this.counter++;
       this.events.set(id, new EventEmmiter.EventEmitter());
+      this.events.get(id).on(PubSub.PROCESSED, result => this.inject(id, event, result));
       return false;
     } else {
       this.reject(id, event);

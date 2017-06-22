@@ -5,7 +5,7 @@ import * as should from 'should';
 import * as sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
-describe('MemoryStore', function() {
+describe('MemoryPubSub', function() {
   let pubSub: MemoryPubSub;
 
   beforeEach(function() {
@@ -51,9 +51,15 @@ describe('MemoryStore', function() {
       const event = {};
       const event2 = {};
       (await pubSub.subscribe('id', event)).should.equal(false);
+      let counter = 0;
       const promise = new Promise(r => {
-        pubSub.on(PubSub.PROCESSED, (id, event, result) => {
-          event.should.equal(event2);
+        pubSub.on(PubSub.PROCESSED, (id, e, result) => {
+          if (counter === 0) {
+            e.should.equal(event);
+            counter++;
+            return;
+          }
+          e.should.equal(event2);
           result.should.eql('result');
           id.should.eql('id');
           r();

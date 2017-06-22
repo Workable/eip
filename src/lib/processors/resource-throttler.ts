@@ -72,7 +72,6 @@ export default class ResourceThrottler extends Processor {
     const result = await this.resource(event);
     const id = this.getId(event);
     await this.pubSub.publish(id, result);
-    this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
   }
 
   async addEvent(event) {
