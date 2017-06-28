@@ -35,7 +35,7 @@ export default class ResourceThrottler extends Processor {
     });
 
     this.pubSub.on(PubSub.PROCESSED, (id, event, result) => {
-      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Processed by another request `);
+      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Processed`);
       this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
     });
 
