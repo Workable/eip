@@ -44,7 +44,7 @@ export default class ResourceThrottler extends Processor {
       const priority = this.getPriority(event);
       const id = this.getRunId(event);
       getLogger().debug(
-        `[${this.id}] [${this.getRunId(event)}] [${id}] [${correlationId}] Adding to queue with priority ${priority}`
+        `[${this.id}] [${id}] [${correlationId}] Adding to queue with priority ${priority}`
       );
       this.queue.enqueue(correlationId, priority, event);
     });
