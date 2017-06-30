@@ -34,15 +34,19 @@ export default class ResourceThrottler extends Processor {
       this.processQueue();
     });
 
-    this.pubSub.on(PubSub.PROCESSED, (id, event, result) => {
-      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Processed`);
+    this.pubSub.on(PubSub.PROCESSED, (correlationId, event, result) => {
+      const id = this.getRunId(event);
+      getLogger().debug(`[${this.id}] [${id}] [${correlationId}] Processed`);
       this.inject(() => ({ ...result, headers: { id: this.getRunId(event) } }));
     });
 
-    this.pubSub.on(PubSub.OVERFLOW, (id, event) => {
+    this.pubSub.on(PubSub.OVERFLOW, (correlationId, event) => {
       const priority = this.getPriority(event);
-      getLogger().debug(`[${this.id}] [${this.getRunId(event)}] - [${id}] Adding to queue with priority ${priority}`);
-      this.queue.enqueue(id, priority, event);
+      const id = this.getRunId(event);
+      getLogger().debug(
+        `[${this.id}] [${this.getRunId(event)}] [${id}] [${correlationId}] Adding to queue with priority ${priority}`
+      );
+      this.queue.enqueue(correlationId, priority, event);
     });
   }
 
@@ -50,13 +54,13 @@ export default class ResourceThrottler extends Processor {
     const events = await this.queue.dequeue();
     if (events && events.length > 0) {
       events.forEach(e => {
-        getLogger().debug(`[${this.id}] [${this.getId(e)}] Dequeuing...`);
+        getLogger().debug(`[${this.id}] [${this.getRunId(e)}][${this.correlationId(e)}] Dequeuing...`);
         this.addEvent(e, true);
       });
     }
   }
 
-  getId(event) {
+  correlationId(event) {
     return event && event.headers && event.headers.correlationId;
   }
 
@@ -70,18 +74,19 @@ export default class ResourceThrottler extends Processor {
 
   async run(event) {
     const result = await this.resource(event);
-    const id = this.getId(event);
+    const id = this.correlationId(event);
     await this.pubSub.publish(id, result);
   }
 
   async addEvent(event, fromQueue = false) {
-    const id = this.getId(event);
-    if (await this.pubSub.subscribe(id, event, !fromQueue)) {
-      getLogger().info(`[${this.id}] ${id} Will not run now`);
+    const correlationId = this.correlationId(event);
+    const id = this.getRunId(event);
+    if (await this.pubSub.subscribe(correlationId, event, !fromQueue)) {
+      getLogger().info(`[${this.id}] [${id}] [${correlationId}] Will not run now`);
       return;
     }
-    this.timer.start(id);
-    getLogger().info(`[${this.id}] ${id} Running`);
+    this.timer.start(`${id} - ${correlationId}`);
+    getLogger().info(`[${this.id}] [${id}] [${correlationId}] Running`);
     this.run(event);
   }
 
