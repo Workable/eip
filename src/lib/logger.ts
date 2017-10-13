@@ -8,9 +8,11 @@ export function init(logger?, name = 'eip') {
   } else {
     Logger = log4js.getLogger(`[${name}]`);
   }
-};
+}
 
 export function getLogger() {
+  if (!Logger) {
+    init();
+  }
   return Logger;
-};
-
+}

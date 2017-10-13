@@ -21,7 +21,6 @@ export default class Route {
   ) {
     this.options = { ...config, ...this.options };
 
-    init(this.options.logger);
     this.logger = getLogger();
 
     if (!this.options.isErrorRoute) {
