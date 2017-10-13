@@ -1,4 +1,4 @@
-import { init, getLogger } from './logger';
+import { getLogger } from './logger';
 import Processor from './processors/processor';
 let routeCounter = 1;
 const config = {
@@ -17,7 +17,7 @@ export default class Route {
   constructor(
     private name = `Route-${routeCounter++}`,
     private options = <any>{},
-    private processors: Processor[] = [],
+    private processors: Processor[] = []
   ) {
     this.options = { ...config, ...this.options };
 
@@ -26,7 +26,7 @@ export default class Route {
     if (!this.options.isErrorRoute) {
       this.errorRoute = new Route(`${this.name}.errorRoute`, { isErrorRoute: true })
         .error()
-        .error((event) => `Stacktrace: ${event._error.stack}.`);
+        .error(event => `Stacktrace: ${event._error.stack}.`);
     }
   }
 
@@ -48,7 +48,9 @@ export default class Route {
     let attempts = 0;
     while (attempts < this.options.route.retryLimit) {
       try {
-        this.logger.error(`${attempts} Retry limit not reached, try again in ${this.options.route.retryDelay} ms. Error ${error}`);
+        this.logger.error(
+          `${attempts} Retry limit not reached, try again in ${this.options.route.retryDelay} ms. Error ${error}`
+        );
         await new Promise(resolve => setTimeout(resolve, this.options.route.retryDelay));
         attempts += 1;
         await cb();
@@ -61,7 +63,7 @@ export default class Route {
   }
 
   static register(name, Processor) {
-    Route.prototype[name] = function (...args) {
+    Route.prototype[name] = function(...args) {
       const processor = new Processor({
         name,
         input: args,
@@ -73,4 +75,4 @@ export default class Route {
       return this;
     };
   }
-};
+}
