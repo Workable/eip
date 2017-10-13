@@ -1,7 +1,7 @@
 {
   "name": "eip",
   "description": "Enterprise Integration Patterns for javascript",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "dependencies": {
     "log4js": "^1.1.0"
   },
