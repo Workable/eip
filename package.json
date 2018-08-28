@@ -3,7 +3,7 @@
   "description": "Enterprise Integration Patterns for javascript",
   "version": "1.8.1",
   "dependencies": {
-    "log4js": "^1.1.0"
+    "log4js": "^3.0.4"
   },
   "main": "build/lib/index.js",
   "typings": "build/lib/index",
@@ -15,7 +15,7 @@
     "watch": "tsc -w -p .",
     "prepublishOnly": "npm test",
     "pretest": "tslint src/*.ts && npm run build",
-    "test": "istanbul test ./node_modules/.bin/_mocha build/test -- --recursive -R spec",
+    "test": "istanbul cover ./node_modules/.bin/_mocha build/test -- --recursive -R spec",
     "posttest": "remap-istanbul -i coverage/coverage.json -o coverage/lcov-report -t html"
   },
   "author": "Nikos Kostoulas <kostoulas@workable.com>",
@@ -25,23 +25,23 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "source-map-support": "^0.4.5",
-    "@types/uuid": "2.0.29",
     "@types/amqplib": "0.5.1",
     "@types/log4js": "0.0.32",
-    "@types/mocha": "2.2.38",
+    "@types/mocha": "^5.2.5",
     "@types/node": "6.0.40",
     "@types/node-uuid": "0.0.28",
     "@types/should": "8.1.30",
     "@types/sinon": "1.16.34",
     "@types/source-map-support": "0.2.28",
     "@types/supertest": "2.0.0",
+    "@types/uuid": "2.0.29",
     "istanbul": "0.4.5",
-    "mocha": "3.2.0",
-    "remap-istanbul": "0.8.4",
+    "mocha": "^5.2.0",
+    "remap-istanbul": "^0.11.1",
     "should": "11.2.0",
     "sinon": "1.17.7",
-    "tslint": "4.4.2",
+    "source-map-support": "^0.4.5",
+    "tslint": "^5.11.0",
     "typescript": "2.1.5"
   },
   "repository": {
