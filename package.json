@@ -3,7 +3,7 @@
   "description": "Enterprise Integration Patterns for javascript",
   "version": "1.8.1",
   "dependencies": {
-    "log4js": "^3.0.4"
+    "log4js": "^6.4.0"
   },
   "main": "build/lib/index.js",
   "typings": "build/lib/index",
