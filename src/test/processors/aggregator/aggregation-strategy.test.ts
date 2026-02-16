@@ -1,7 +1,7 @@
 import AggregatorStrategy from '../../../lib/processors/aggregator/aggregation-strategy';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('AggragationStrategy', function () {
   class AggregationStrategyTest extends AggregatorStrategy {

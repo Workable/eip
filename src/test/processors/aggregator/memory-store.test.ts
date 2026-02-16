@@ -2,7 +2,7 @@ import MemoryStore from '../../../lib/processors/aggregator/memory-store';
 import * as should from 'should';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('MemoryStore', function () {
   let store: MemoryStore;

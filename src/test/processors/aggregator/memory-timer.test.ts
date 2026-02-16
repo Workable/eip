@@ -1,7 +1,7 @@
 import MemoryTimer from '../../../lib/processors/aggregator/memory-timer';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Timer', function () {
   let clock;

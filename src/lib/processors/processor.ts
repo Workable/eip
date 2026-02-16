@@ -38,7 +38,7 @@ abstract class Processor extends EventEmmiter.EventEmitter {
     }
   }
 
-  async abstract process(event: any);
+  abstract process(event: any);
 }
 
 export default Processor;

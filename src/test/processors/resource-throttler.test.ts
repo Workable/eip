@@ -2,11 +2,11 @@ import Throttler from '../../lib/processors/resource-throttler';
 import * as sinon from 'sinon';
 import { init, getLogger } from '../../lib/logger';
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 const wait = async () => {
   for (let _ of [...Array(10).keys()]) {
-    await new Promise(r => r());
+    await new Promise<void>(r => r());
   }
 };
 

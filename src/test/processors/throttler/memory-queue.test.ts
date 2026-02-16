@@ -2,7 +2,7 @@ import MemoryQueue from '../../../lib/processors/throttler/memory-queue';
 import Queue from '../../../lib/processors/throttler/queue';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('MemoryQueue', function() {
   let queue: Queue;

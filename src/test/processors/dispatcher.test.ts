@@ -1,7 +1,7 @@
 import Dispatcher from '../../lib/processors/dispatcher';
 import * as sinon from 'sinon';
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Dispatcher', function () {
   let dispatcher;
