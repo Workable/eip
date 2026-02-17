@@ -9,9 +9,9 @@ abstract class PubSub extends EventEmmiter.EventEmitter {
 
   abstract subscribe(id: string, event: any, subscribe: boolean): Promise<boolean>;
 
-  abstract publish(id: string, result: any);
+  abstract publish(id: string, result: any): void | Promise<void>;
 
-  abstract timeout();
+  abstract timeout(): void | Promise<void>;
 
   inject(id, event, result) {
     this.emit(PubSub.PROCESSED, id, event, result);
