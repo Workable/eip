@@ -38,7 +38,7 @@ abstract class Processor extends EventEmmiter.EventEmitter {
     }
   }
 
-  abstract process(event: any);
+  abstract process(event: any): Promise<unknown | void>;
 }
 
 export default Processor;
