@@ -24,6 +24,9 @@
     "Panos Matzavinos <matzavinos@workable.com>"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
   "devDependencies": {
     "@types/amqplib": "0.5.1",
     "@types/mocha": "^10.0.9",
