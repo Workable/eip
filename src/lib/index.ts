@@ -1,9 +1,12 @@
 import './register-routes';
-export { default as Route } from './route';
-export { default as Processor } from './processors/processor';
-export { default as Store } from './processors/aggregator/store';
-export { default as Timer } from './processors/aggregator/timer';
-export { default as PubSub } from './processors/throttler/pub-sub';
-export { default as Queue } from './processors/throttler/queue';
-export { default as AggregationStrategy } from './processors/aggregator/aggregation-strategy';
-export { init as initLogger, getLogger } from './logger';
+import Route from './route';
+import Processor from './processors/processor';
+import Store from './processors/aggregator/store';
+import Timer from './processors/aggregator/timer';
+import PubSub from './processors/throttler/pub-sub';
+import Queue from './processors/throttler/queue';
+import AggregationStrategy from './processors/aggregator/aggregation-strategy';
+import { init as initLogger, getLogger } from './logger';
+
+export { Route, Processor, Store, Timer, PubSub, Queue, AggregationStrategy, initLogger, getLogger };
+export default { Route, Processor, Store, Timer, PubSub, Queue, AggregationStrategy, initLogger, getLogger };
