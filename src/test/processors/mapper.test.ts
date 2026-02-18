@@ -1,6 +1,6 @@
 import Mapper from '../../lib/processors/mapper';
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Mapper', function () {
   let mapper;

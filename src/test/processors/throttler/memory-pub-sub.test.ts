@@ -3,7 +3,7 @@ import PubSub from '../../../lib/processors/throttler/pub-sub';
 import * as should from 'should';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('MemoryPubSub', function() {
   let pubSub: MemoryPubSub;
@@ -62,7 +62,7 @@ describe('MemoryPubSub', function() {
           e.should.equal(event2);
           result.should.eql('result');
           id.should.eql('id');
-          r();
+          r(undefined);
         });
       });
       (await pubSub.subscribe('id', event2)).should.equal(true);

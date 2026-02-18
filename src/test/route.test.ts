@@ -1,7 +1,7 @@
 import Route from '../lib/route';
 import Mapper from '../lib/processors/mapper';
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 const asyncError = (name, timeout) => {
   return new Promise((_, r) => setTimeout(() => r(new Error(name)), timeout));

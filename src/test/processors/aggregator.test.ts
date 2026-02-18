@@ -5,7 +5,7 @@ import * as MaxNumStrategy from '../../lib/processors/aggregator/max-num-strateg
 
 import * as sinon from 'sinon';
 import * as should from 'should';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Aggregator', function () {
 

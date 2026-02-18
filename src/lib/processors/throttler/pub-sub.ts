@@ -7,11 +7,11 @@ abstract class PubSub extends EventEmmiter.EventEmitter {
     super();
   }
 
-  abstract async subscribe(id: string, event: any, subscribe: boolean): Promise<boolean>;
+  abstract subscribe(id: string, event: any, subscribe: boolean): Promise<boolean>;
 
-  abstract async publish(id: string, result: any);
+  abstract publish(id: string, result: any): void | Promise<void>;
 
-  abstract async timeout();
+  abstract timeout(): void | Promise<void>;
 
   inject(id, event, result) {
     this.emit(PubSub.PROCESSED, id, event, result);

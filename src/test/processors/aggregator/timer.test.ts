@@ -1,7 +1,7 @@
 import Timer from '../../../lib/processors/aggregator/timer';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Timer', function () {
   class TimerTest extends Timer {

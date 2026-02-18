@@ -2,7 +2,7 @@ import Logger from '../../lib/processors/logger';
 import * as sinon from 'sinon';
 import { getLogger } from '../../lib/logger';
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Logger', function () {
   let logger;

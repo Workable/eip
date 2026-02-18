@@ -1,7 +1,7 @@
 import MaxNumStrategy from '../../../lib/processors/aggregator/max-num-strategy';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('AggragationStrategy', function () {
   afterEach(function () {

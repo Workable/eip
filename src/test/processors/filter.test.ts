@@ -2,7 +2,7 @@ import Filter from '../../lib/processors/filter';
 import * as sinon from 'sinon';
 import * as should from 'should';
 
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Filter', function () {
   let filter;

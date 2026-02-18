@@ -1,6 +1,6 @@
 import Processsor from '../../lib/processors/processor';
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Processor', function () {
   class TestProcessor extends Processsor {

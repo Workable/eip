@@ -1,7 +1,7 @@
 import Store from '../../../lib/processors/aggregator/store';
 
 import * as sinon from 'sinon';
-const sandbox = sinon.sandbox.create();
+const sandbox = sinon.createSandbox();
 
 describe('Store', function () {
   class StoreTest extends Store {
